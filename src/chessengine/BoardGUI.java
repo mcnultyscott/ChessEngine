@@ -31,19 +31,26 @@ public class BoardGUI extends Application {
     final int DIMENSION = 8;
     final int SQUARE_WIDTH = 100;
     final int SQUARE_HEIGHT = 100;
-    final double STROKE_WIDTH = 15;
+    final double STROKE_WIDTH = 50;
     final Font COORDINATE_SIZE = new Font(20);
     String[] fileLex = {"A", "B", "C", "D", "E", "F", "G", "H"};
     String[] rankLex = {"1", "2", "3", "4", "5", "6", "7", "8"};
-    ArrayList<Square> squares = new ArrayList<Square>();
+    ArrayList<Square> squares;
+    Square[][] squaresFromBoard;
+    Square target;
     
     @Override
-    public void start(Stage primaryStage) {        
+    public void start(Stage primaryStage) {   
+        Board board = new Board();
+        squaresFromBoard = board.getSquares();
+        squares = new ArrayList<Square>();
+        convertFrom2DArrayToArrayList(squares, squaresFromBoard);
+        
         Group root = new Group();
         Scene scene = new Scene(root, DIMENSION * SQUARE_WIDTH, 
                                     DIMENSION * SQUARE_HEIGHT);
         
-        addSquares(squares, root);
+        giveSquaresColor(squares, root);
         addRankAndFileTexts(root);
         
         for (int i = 0; i < squares.size(); i++){
@@ -68,42 +75,41 @@ public class BoardGUI extends Application {
         }
     }
     
-    // Makes squarea and adds them to the ArrayList and root
-    private void addSquares(ArrayList<Square> squares, Group root){
+    // Makes squarea and adds them to the ArrayList and root. To save writing
+    // another loop + nested loop the squares are also added to the root, even
+    // though this isn't implied by the function name.
+    private void giveSquaresColor(ArrayList<Square> squares, Group root){
         for (int i = 0; i < DIMENSION; ++i){
             for (int j = 0; j < DIMENSION; ++j){
-                Square s = new Square(
-                         i, j,
-                        (j * SQUARE_WIDTH),
-                        (i * SQUARE_HEIGHT),
-                        (SQUARE_WIDTH),
-                        (SQUARE_HEIGHT));
+                
+                // Acts as a normal 2D array access
+                target = squares.get((i * DIMENSION) + j);
                 
                 // Sets color
                 if (i % 2 == 0){
                     if (j % 2 == 0){
-                        s.setFill(Color.BEIGE);
+                        target.setFill(Color.BEIGE);
                     }
                     else{
-                        s.setFill(Color.DARKGREEN);
+                        target.setFill(Color.DARKGREEN);
                     }
                 }
                 else{
                     if (j % 2 != 0){
-                        s.setFill(Color.BEIGE);
+                        target.setFill(Color.BEIGE);
                     }
                     else{
-                        s.setFill(Color.DARKGREEN);
+                        target.setFill(Color.DARKGREEN);
                     }
                 }
-                
-                squares.add(s);
-                root.getChildren().add(s);
+
+                root.getChildren().add(target);
             } // end j for
         } // end i for
     }
     
     private void giveSquareEventHandling (Square square){
+        
         square.setOnDragDetected(new EventHandler <MouseEvent>() {
             public void handle(MouseEvent event) {
                 Piece piece;
@@ -113,7 +119,8 @@ public class BoardGUI extends Application {
                 if (square.getOccupied()){
                     piece = square.getOccupyingPiece();
                     
-                    Dragboard db = piece.startDragAndDrop(TransferMode.ANY);
+                    //Dragboard db = piece.startDragAndDrop(TransferMode.ANY);
+                    Dragboard db = square.startDragAndDrop(TransferMode.ANY);
 
                     ClipboardContent content = new ClipboardContent();
                     
@@ -121,39 +128,43 @@ public class BoardGUI extends Application {
                     // picture for the piece. What is here is just a test.
                     content.putString("Piece: " + piece.toString());
                     db.setContent(content);
-
-                    event.consume();
                 }
 
                 event.consume();
             }
         });
 
-//        rect.setOnDragOver(new EventHandler <DragEvent>() {
-//            public void handle(DragEvent event) {
-//                /* data is dragged over the rect */
-//                System.out.println("onDragOver");
-//
-//                /* accept it only if it is  not dragged from the same node 
-//                 * and if it has a string data */
-//                if (event.getGestureSource() != rect &&
-//                        event.getDragboard().hasString()) {
-//                    /* allow for both copying and moving, whatever user chooses */
-//                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-//                }
-//
-//                event.consume();
-//            }
-//        });
+        square.setOnDragOver(new EventHandler <DragEvent>() {
+            public void handle(DragEvent event) {
+                /* data is dragged over the rect */
+                square.setStrokeType(StrokeType.INSIDE);
+                square.setStrokeWidth(STROKE_WIDTH);
+                System.out.println("OnDragOver: " + 
+                        "X: " + square.getX() +
+                        "Y: " + square.getY());
+                //System.out.println("onDragOver");
+
+                /* accept it only if it is  not dragged from the same node 
+                 * and if it has a string data */
+                if (event.getGestureSource() != square &&
+                        event.getDragboard().hasString()) {
+                    /* allow for both copying and moving, whatever user chooses */
+                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                }
+
+                event.consume();
+            }
+        });
 
         square.setOnDragEntered(new EventHandler <DragEvent>() {
             public void handle(DragEvent event) {
                 /* the drag-and-drop gesture entered the rect */
+                System.out.println("OnDragEntered: " + 
+                                "X: " + square.getX() +
+                                "Y: " + square.getY());
+                //square.setFill(Color.BLACK);
                 square.setStrokeType(StrokeType.INSIDE);
                 square.setStrokeWidth(STROKE_WIDTH);
-                System.out.println("Entered: " + 
-                        "X: " + square.getX() +
-                        "Y: " + square.getY());
 
                 /* show to the user that it is an actual gesture rect */
 //                        if (event.getGestureSource() != rect &&
@@ -209,6 +220,17 @@ public class BoardGUI extends Application {
 //                event.consume();
 //            }
 //        });
+    }
+    
+    // Converts the 2D array of squares into an array list. Annoying result
+    // of using two different data structures without thinking about it
+    private void convertFrom2DArrayToArrayList(ArrayList<Square> squares,
+                                                Square[][] s){
+        for (int i = 0; i < DIMENSION; i++){
+            for (int j = 0; j < DIMENSION; j++){
+                squares.add(s[i][j]);
+            }
+        }
     }
     
     /**

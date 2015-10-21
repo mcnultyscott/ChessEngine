@@ -14,8 +14,9 @@ import java.util.ArrayList;
 public class Board {
     private final String BLACK = "black";
     private final String WHITE = "white";
-    private final int ROWS = 8;
-    private final int COLUMNS = 8;    
+    private final int DIMENSION = 8;  
+    final int SQUARE_WIDTH = 100;
+    final int SQUARE_HEIGHT = 100;
     PieceTypeEnum typeOfPiece;
     Square target;
     
@@ -51,13 +52,14 @@ public class Board {
     //  A   B   C   D   E   F   G   H   |   file
     
     Square[][] squares = new Square[8][8];
-    
+    //ArrayList<Square> squares = new ArrayList<Square>();
     //  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
     // [P][P][P][P][P][P][P][P][N][N][B][B][R][R][Q][K] 
     ArrayList<Piece> whitePieces = new ArrayList<Piece>();
     ArrayList<Piece> blackPieces = new ArrayList<Piece>();
     
     public Board(){  
+        initializeSquares();
         setUpNewGame();
     }
     
@@ -67,6 +69,23 @@ public class Board {
 
     public ArrayList<Piece> getBlackPieces(){
         return blackPieces;
+    }
+    
+    // Sets fields in each Square object to correct value
+    private void initializeSquares(){
+        for (int i = 0; i < DIMENSION; i++){
+            for (int j = 0; j < DIMENSION; j++){
+                squares[i][j] = new Square(
+                        i,
+                        j,
+                        j * SQUARE_WIDTH,
+                        i * SQUARE_HEIGHT,
+                        SQUARE_WIDTH,
+                        SQUARE_HEIGHT);
+                
+                squares[i][j].setOccupied(false);
+            }
+        }
     }
     
     public void setUpNewGame(){
@@ -207,14 +226,13 @@ public class Board {
         squares[7][4].setOccupyingPiece(blackPieces.get(15));
     }
     
-    // Resets squares on board
+    // Removes pieces from squares on board
     private void clearSquares(){
         for (int i = 0; i < 8; ++i){
             for (int j = 0; j < 8; ++j){
                 target = squares[i][j];
                 target.setOccupied(false);
-                target.setRow(i);
-                target.setColumn(j);
+                target.setOccupyingPiece(null);
             }
         }
     }
@@ -298,8 +316,8 @@ public class Board {
         pawn.setPossibleMoves(moves);
     }
     
-    // TODO: This needs to be better; think of better way to elegantly
-    // get the potential moves.
+    // TODO: This needs to be better; it looks very ugly.
+    // Think of better way to get the potential moves.
     private void calcKnightMoves(Piece piece, ArrayList<Square> moves){
         target = piece.getCurrentSquare();
         int row = target.getRow();
@@ -312,7 +330,7 @@ public class Board {
         
         for (int i = 0; i < newUpDownRows.length; i++){
             for (int j = 0; j < newLeftRightColumns.length; j++){
-                if (newUpDownRows[i] <= ROWS && newLeftRightColumns[j] <= COLUMNS){
+                if (newUpDownRows[i] <= DIMENSION && newLeftRightColumns[j] <= DIMENSION){
                     if (squares[newUpDownRows[i]][newLeftRightColumns[j]].getOccupied()){
                         moves.add(squares[newUpDownRows[i]][newLeftRightColumns[j]]);
                     }
@@ -322,7 +340,7 @@ public class Board {
         
         for (int i = 0; i < newLeftRightRows.length; i++){
             for (int j = 0; j < newUpDownColumns.length; j++){
-                if (newLeftRightRows[i] <= ROWS && newUpDownColumns[j] <= COLUMNS){
+                if (newLeftRightRows[i] <= DIMENSION && newUpDownColumns[j] <= DIMENSION){
                     if (squares[newLeftRightRows[i]][newUpDownColumns[j]].getOccupied()){
                         moves.add(squares[newLeftRightRows[i]][newUpDownColumns[j]]);
                     }
@@ -433,7 +451,7 @@ public class Board {
         int count;
         
         count = column + 1;
-        while (count < COLUMNS){
+        while (count < DIMENSION){
             if (squares[row][count].getOccupied()){
                 break;
             }
@@ -453,7 +471,7 @@ public class Board {
         int count;
         
         count = row + 1;
-        while (count < ROWS){
+        while (count < DIMENSION){
             if (squares[count][column].getOccupied()){
                 break;
             }
@@ -493,7 +511,7 @@ public class Board {
         
         column = column - 1;
         row = row + 1;
-        while (column >= 0 && row < ROWS){
+        while (column >= 0 && row < DIMENSION){
             if (squares[row][column].getOccupied()){
                 break;
             }
@@ -514,7 +532,7 @@ public class Board {
         
         column = column + 1;
         row = row + 1;   
-        while (column < COLUMNS && row < ROWS){
+        while (column < DIMENSION && row < DIMENSION){
             if (squares[row][column].getOccupied()){
                 break;
             }
@@ -556,7 +574,7 @@ public class Board {
         
         column = column + 1;
         row = row - 1;
-        while (column < COLUMNS && row >= 0){
+        while (column < DIMENSION && row >= 0){
             if (squares[row][column].getOccupied()){
                 break;
             }
@@ -568,5 +586,8 @@ public class Board {
         return moves;
     }
     
+    public Square[][] getSquares(){
+        return squares;
+    }
 }
 
