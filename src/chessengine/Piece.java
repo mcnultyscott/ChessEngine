@@ -14,6 +14,7 @@ import javafx.scene.shape.Rectangle;
 public class Piece extends Rectangle {
     String color;
     Square currentSquare;
+    String[] pieceStringList = {"Pawn", "Knight", "Bishop", "Rook", "Queen", "King"};
     PieceTypeEnum typeOfPiece;
     ArrayList<Square> moveSquares;// = new ArrayList<Square>();
     ArrayList<Square> attackSquares;// = new ArrayList<Square>();
@@ -57,5 +58,9 @@ public class Piece extends Rectangle {
     
     public void setAttackingSquares(ArrayList<Square> attack){
         attackSquares = attack;
+    }
+    
+    public String toString(){
+        return getColor() + pieceStringList[typeOfPiece.ordinal()];
     }
 }
