@@ -110,11 +110,18 @@ public class BoardGUI extends Application {
     
     private void giveSquareEventHandling (Square square){
         
+        square.setOnMouseClicked(new EventHandler <MouseEvent>() {
+            public void handle(MouseEvent event) {
+                
+            }
+        });
+        
         square.setOnDragDetected(new EventHandler <MouseEvent>() {
             public void handle(MouseEvent event) {
                 Piece piece;
-                System.out.println("X: " + square.getX() + 
-                                   "Y: " + square.getY());
+                System.out.println("OnDragDetected: " + 
+                        "X: " + square.getX() +
+                        "Y: " + square.getY());
                 
                 if (square.getOccupied()){
                     piece = square.getOccupyingPiece();
@@ -126,7 +133,8 @@ public class BoardGUI extends Application {
                     
                     // What should really be put on the clipboard is the 
                     // picture for the piece. What is here is just a test.
-                    content.putString("Piece: " + piece.toString());
+                    //content.putString("Piece: " + piece.toString());
+                    System.out.println("Piece: " + piece.toString());
                     db.setContent(content);
                 }
 
