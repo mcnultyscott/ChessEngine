@@ -7,20 +7,17 @@ package chessengine;
 
 import java.util.ArrayList;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -35,18 +32,19 @@ public class BoardGUI extends Application {
     final int SQUARE_WIDTH = 100;
     final int SQUARE_HEIGHT = 100;
     final double STROKE_WIDTH = 15;
+    final Font COORDINATE_SIZE = new Font(20);
+    String[] fileLex = {"A", "B", "C", "D", "E", "F", "G", "H"};
+    String[] rankLex = {"1", "2", "3", "4", "5", "6", "7", "8"};
+    ArrayList<Square> squares = new ArrayList<Square>();
     
     @Override
-    public void start(Stage primaryStage) {
-        String[] fileLex = {"A", "B", "C", "D", "E", "F", "G", "H"};
-        String[] rankLex = {"1", "2", "3", "4", "5", "6", "7", "8"};
-        ArrayList<Square> squares = new ArrayList<Square>();
-        ArrayList<Text> rankFileStringTexts = new ArrayList<Text>();
-        
+    public void start(Stage primaryStage) {        
         Group root = new Group();
-        Scene scene = new Scene(root, DIMENSION * SQUARE_WIDTH, DIMENSION * SQUARE_HEIGHT);
+        Scene scene = new Scene(root, DIMENSION * SQUARE_WIDTH, 
+                                    DIMENSION * SQUARE_HEIGHT);
         
         addSquares(squares, root);
+        addRankAndFileTexts(root);
         
         for (int i = 0; i < squares.size(); i++){
             giveSquareEventHandling(squares.get(i));
@@ -54,6 +52,20 @@ public class BoardGUI extends Application {
         
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+    
+    private void addRankAndFileTexts(Group root){
+        for (int i = 0; i < DIMENSION; ++i){
+            for (int j = DIMENSION-1; j >= 0; --j){
+                Text text = new Text (
+                        ((i * SQUARE_WIDTH)),
+                        ((Math.abs(j-(DIMENSION-1)) * SQUARE_HEIGHT) + SQUARE_HEIGHT),
+                        (fileLex[i] + rankLex[j]));
+                
+                text.setFont(COORDINATE_SIZE);
+                root.getChildren().add(text);
+            }
+        }
     }
     
     // Makes squarea and adds them to the ArrayList and root
