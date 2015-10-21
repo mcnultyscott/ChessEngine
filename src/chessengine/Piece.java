@@ -62,9 +62,7 @@ public class Piece extends Rectangle {
     
     public String toString(){
         return getColor() +  " " + 
-                pieceStringList[typeOfPiece.ordinal()] + " " +
-                currentSquare.getRow() + " " + 
-                currentSquare.getColumn();
+                pieceStringList[typeOfPiece.ordinal()];
                 
     }
 }
