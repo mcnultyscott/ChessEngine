@@ -8,6 +8,7 @@ package chessengine;
 import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.ClipboardContent;
@@ -15,7 +16,10 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -41,6 +45,50 @@ public class BoardGUI extends Application {
     
     @Override
     public void start(Stage primaryStage) {   
+        
+        /////////////////////////////////////////////////////////////
+        // Experimenting with images
+//        Image king = new Image("/ChessPiecePNGS/BlackKing.png");
+//        ImageView v = new ImageView();
+//        v.setImage(king);
+        
+        
+        Pane canvas = new Pane();
+        canvas.setStyle("-fx-background-color: black;");
+        canvas.setPrefSize(200,200);
+        Circle circle = new Circle(50,Color.BLUE);
+        circle.relocate(20, 20);
+        Rectangle rectangle = new Rectangle(100,100,Color.RED);
+        rectangle.relocate(70,70);
+        canvas.getChildren().addAll(circle,rectangle);
+        
+        
+        // allow the label to be dragged around.
+        final Delta dragDelta = new Delta();
+        rectangle.setOnMousePressed(new EventHandler<MouseEvent>() {
+          @Override public void handle(MouseEvent mouseEvent) {
+            // record a delta distance for the drag and drop operation.
+            dragDelta.x = rectangle.getLayoutX() - mouseEvent.getSceneX();
+            dragDelta.y = rectangle.getLayoutY() - mouseEvent.getSceneY();
+            rectangle.setCursor(Cursor.MOVE);
+          }
+        });
+        
+        rectangle.setOnMouseReleased(new EventHandler<MouseEvent>() {
+          @Override public void handle(MouseEvent mouseEvent) {
+            rectangle.setCursor(Cursor.HAND);
+          }
+        });
+        
+        rectangle.setOnMouseDragged(new EventHandler<MouseEvent>() {
+          @Override public void handle(MouseEvent mouseEvent) {
+            rectangle.setLayoutX(mouseEvent.getSceneX() + dragDelta.x);
+            rectangle.setLayoutY(mouseEvent.getSceneY() + dragDelta.y);
+          }
+        });
+     
+        //////////////////////////////////////////////////////////
+        
         Board board = new Board();
         squaresFromBoard = board.getSquares();
         squares = new ArrayList<Square>();
@@ -57,6 +105,7 @@ public class BoardGUI extends Application {
             giveSquareEventHandling(squares.get(i));
         }
         
+        root.getChildren().add(canvas);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -121,7 +170,7 @@ public class BoardGUI extends Application {
                 Piece piece;
                 System.out.println("OnDragDetected: " + 
                         "X: " + square.getX() +
-                        "Y: " + square.getY());
+                        " Y: " + square.getY());
                 
                 if (square.getOccupied()){
                     piece = square.getOccupyingPiece();
@@ -137,6 +186,9 @@ public class BoardGUI extends Application {
                     System.out.println("Piece: " + piece.toString());
                     db.setContent(content);
                 }
+                else{
+                    System.out.println("No piece");
+                }
 
                 event.consume();
             }
@@ -149,7 +201,7 @@ public class BoardGUI extends Application {
                 square.setStrokeWidth(STROKE_WIDTH);
                 System.out.println("OnDragOver: " + 
                         "X: " + square.getX() +
-                        "Y: " + square.getY());
+                        " Y: " + square.getY());
                 //System.out.println("onDragOver");
 
                 /* accept it only if it is  not dragged from the same node 
@@ -169,7 +221,7 @@ public class BoardGUI extends Application {
                 /* the drag-and-drop gesture entered the rect */
                 System.out.println("OnDragEntered: " + 
                                 "X: " + square.getX() +
-                                "Y: " + square.getY());
+                                " Y: " + square.getY());
                 //square.setFill(Color.BLACK);
                 square.setStrokeType(StrokeType.INSIDE);
                 square.setStrokeWidth(STROKE_WIDTH);
@@ -247,5 +299,8 @@ public class BoardGUI extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+    
+    // records relative x and y co-ordinates.
+  class Delta { double x, y; }
     
 }
