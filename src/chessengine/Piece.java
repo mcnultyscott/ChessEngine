@@ -18,8 +18,8 @@ public class Piece extends ImageView{
     Square currentSquare;
     String[] pieceStringList = {"Pawn", "Knight", "Bishop", "Rook", "Queen", "King"};
     PieceTypeEnum typeOfPiece;
-    ArrayList<Square> moveSquares;// = new ArrayList<Square>();
-    ArrayList<Square> attackSquares;// = new ArrayList<Square>();
+    ArrayList<Square> moveSquares;
+    ArrayList<Square> attackSquares;
     ImageView view = new ImageView();
     Image image;
     String pathForPNG;
@@ -70,8 +70,8 @@ public class Piece extends ImageView{
     public void setAttackingSquares(ArrayList<Square> attack){
         attackSquares = attack;
     }
-   
     
+    @Override
     public String toString(){
         return getColor() +  " " + 
                 pieceStringList[typeOfPiece.ordinal()];

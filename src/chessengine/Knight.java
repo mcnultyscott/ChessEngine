@@ -10,7 +10,6 @@ package chessengine;
  * @author Scott
  */
 public class Knight extends Piece{
-    String pathForPNG;
     
     public Knight(String col, PieceTypeEnum type, String path){
         super(col, type);

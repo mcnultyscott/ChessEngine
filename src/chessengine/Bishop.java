@@ -10,7 +10,6 @@ package chessengine;
  * @author Scott
  */
 public class Bishop extends Piece{
-    String pathForPNG;
     
     public Bishop(String col, PieceTypeEnum type, String path){
         super(col, type);

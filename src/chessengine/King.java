@@ -12,7 +12,6 @@ package chessengine;
 public class King extends Piece{
     Boolean hasMoved = false;
     Boolean inCheck = false;
-    String pathForPNG;
     
     public King(String col, PieceTypeEnum type, String path){
         super(col, type);

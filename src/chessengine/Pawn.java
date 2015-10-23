@@ -13,13 +13,9 @@ import javafx.scene.image.ImageView;
  * @author Scott
  */
 public class Pawn extends Piece{
-    Image pawnImage;
     Boolean hasMoved = false;
     Boolean promotionPossible = false;
     Boolean enPassantable = false;
-    String pathForPNG;
-    Image image;
-    ImageView view;
     
     public Pawn(String col, PieceTypeEnum type, String path){
         super(col, type);
