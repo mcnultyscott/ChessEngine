@@ -13,7 +13,7 @@ import javafx.scene.image.ImageView;
  *
  * @author Scott
  */
-public class Piece extends Image {
+public class Piece {
     String color;
     Square currentSquare;
     String[] pieceStringList = {"Pawn", "Knight", "Bishop", "Rook", "Queen", "King"};
@@ -23,11 +23,6 @@ public class Piece extends Image {
     ImageView view = new ImageView();
     Image image;
     String pathForPNG;
-    
-    public Piece(String col, PieceTypeEnum type){
-        color = col;
-        typeOfPiece = type;
-    }
     
     public Piece(String col, PieceTypeEnum type){
            color = col;

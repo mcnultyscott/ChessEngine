@@ -57,10 +57,10 @@ public class BoardGUI extends Application {
         Rectangle rectangle = new Rectangle(100,100,Color.RED);
         rectangle.relocate(70,70);
         Pawn whitePawn = new Pawn("white", typeOfPiece.PAWN, "ChessPiecePNGs/whitePawn.png");
-        whitePawn.relocate(200, 200);
+        //whitePawn.relocate(200, 200);
         whitePawn.paintCurrentImagePath();
         whitePawn.setViewToCurrentImage();
-        canvas.getChildren().addAll(rectangle, whitePawn);
+        canvas.getChildren().addAll(rectangle);
         
         // allow the label to be dragged around.
         final Delta dragDelta = new Delta();
@@ -116,6 +116,20 @@ public class BoardGUI extends Application {
           @Override public void handle(MouseEvent mouseEvent) {
             rectangle.setLayoutX(mouseEvent.getSceneX() + dragDelta.x);
             rectangle.setLayoutY(mouseEvent.getSceneY() + dragDelta.y);
+            
+            double xDrag = rectangle.getLayoutX() + (SQUARE_WIDTH / 2);
+            double yDrag = rectangle.getLayoutY() + (SQUARE_HEIGHT / 2);
+            
+            Square target;
+            int count = 0;
+            
+            while (count < squares.size() && 
+                    !squares.get(count).contains(xDrag, yDrag)){
+                count++;
+            }
+            
+            target = squares.get(count);
+            target.setFill(Color.BLUEVIOLET);
           }
         });
      
