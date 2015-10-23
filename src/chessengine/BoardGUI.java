@@ -11,6 +11,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
@@ -34,6 +35,8 @@ public class BoardGUI extends Application {
     final int DIMENSION = 8;
     final int SQUARE_WIDTH = 100;
     final int SQUARE_HEIGHT = 100;
+    final int PIECE_WIDTH = 80;
+    final int PIECE_HEIGHT = 80;
     final double STROKE_WIDTH = 50;
     final Font COORDINATE_SIZE = new Font(20);
     String[] fileLex = {"A", "B", "C", "D", "E", "F", "G", "H"};
@@ -51,15 +54,18 @@ public class BoardGUI extends Application {
 //        Image king = new Image("/ChessPiecePNGS/BlackKing.png");
        ImageView v = new ImageView();
 //        v.setImage(king);     
-        
+        Image im;
         Pane canvas = new Pane();
         canvas.setPrefSize(200,200);
         Rectangle rectangle = new Rectangle(100,100,Color.RED);
         rectangle.relocate(70,70);
         Pawn whitePawn = new Pawn("white", typeOfPiece.PAWN, "ChessPiecePNGs/whitePawn.png");
         //whitePawn.relocate(200, 200);
-        whitePawn.paintCurrentImagePath();
-        whitePawn.setViewToCurrentImage();
+        im = whitePawn.getCurrentImage();
+        v.setImage(im);
+        v.setFitWidth(PIECE_WIDTH);
+        v.setFitHeight(PIECE_HEIGHT);
+        v.preserveRatioProperty();
         canvas.getChildren().addAll(rectangle);
         
         // allow the label to be dragged around.
@@ -128,8 +134,8 @@ public class BoardGUI extends Application {
                 count++;
             }
             
-            target = squares.get(count);
-            target.setFill(Color.BLUEVIOLET);
+//            target = squares.get(count);
+//            target.setFill(Color.BLUEVIOLET);
           }
         });
      
@@ -152,6 +158,7 @@ public class BoardGUI extends Application {
         }
         
         root.getChildren().add(canvas);
+        root.getChildren().add(v);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

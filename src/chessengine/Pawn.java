@@ -18,7 +18,6 @@ public class Pawn extends Piece{
     Boolean promotionPossible = false;
     Boolean enPassantable = false;
     String pathForPNG;
-    ImageView view = new ImageView();
     Image image;
     
     public Pawn(String col, PieceTypeEnum type, String path){
@@ -42,12 +41,9 @@ public class Pawn extends Piece{
         return enPassantable;
     }
     
-    public void paintCurrentImagePath(){
+    public Image getCurrentImage(){
         image = new Image(pathForPNG);
-    }
-    
-    public void setViewToCurrentImage(){
-        view.setImage(image);
+        return image;
     }
 }
 
