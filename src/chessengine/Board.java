@@ -20,6 +20,20 @@ public class Board {
     PieceTypeEnum typeOfPiece;
     Square target;
     
+    // Paths to png files
+    private final String whitePawnPNGPath = "ChessPiecePNGs/whitePawn.png";
+    private final String blackPawnPNGPath = "ChessPiecePNGs/blackPawn.png";
+    private final String whiteKnightPNGPath = "ChessPiecePNGs/whiteKnight.png";
+    private final String blackKnightPNGPath = "ChessPiecePNGs/blackKnight.png";
+    private final String whiteBishopPNGPath = "ChessPiecePNGs/whiteBishop.png";
+    private final String blackBishopPNGPath = "ChessPiecePNGs/blackBishop.png";
+    private final String whiteRookPNGPath = "ChessPiecePNGs/whiteRook.png";
+    private final String blackRookPNGPath = "ChessPiecePNGs/blackRook.png";
+    private final String whiteQueenPNGPath = "ChessPiecePNGs/whiteQueen.png";
+    private final String blackQueenPNGPath = "ChessPiecePNGs/blackQueen.png";
+    private final String whiteKingPNGPath = "ChessPiecePNGs/whiteKing.png";
+    private final String blackKingPNGPath = "ChessPiecePNGs/blackKing.png";
+    
     // [ ] [ ] [2] [ ] [ ]
     // [7] [ ] [2] [ ] [4]
     // [ ] [7] [2] [4] [ ]
@@ -111,8 +125,8 @@ public class Board {
     // Create pawns, add to ArrayLists
     private void makePawns(){
         for (int i = 0; i < 8; i++){
-            whitePieces.add(new Pawn(WHITE, typeOfPiece.PAWN));
-            blackPieces.add(new Pawn(BLACK, typeOfPiece.PAWN));
+            whitePieces.add(new Pawn(WHITE, typeOfPiece.PAWN, whitePawnPNGPath));
+            blackPieces.add(new Pawn(BLACK, typeOfPiece.PAWN, blackPawnPNGPath));
         }
     }
     
@@ -132,11 +146,11 @@ public class Board {
     
     // Make knights, add to ArrayLists 
     private void makeKnights(){
-        whitePieces.add(new Knight(WHITE, typeOfPiece.KNIGHT));
-        whitePieces.add(new Knight(WHITE, typeOfPiece.KNIGHT));
+        whitePieces.add(new Knight(WHITE, typeOfPiece.KNIGHT, whiteKnightPNGPath));
+        whitePieces.add(new Knight(WHITE, typeOfPiece.KNIGHT, whiteKnightPNGPath));
         
-        blackPieces.add(new Knight(BLACK, typeOfPiece.KNIGHT));
-        blackPieces.add(new Knight(BLACK, typeOfPiece.KNIGHT));
+        blackPieces.add(new Knight(BLACK, typeOfPiece.KNIGHT, blackKnightPNGPath));
+        blackPieces.add(new Knight(BLACK, typeOfPiece.KNIGHT, blackKnightPNGPath));
     }
     
     // Put knights on starting squares
@@ -154,11 +168,11 @@ public class Board {
     
     // Make bishops, add to ArrayLists
     private void makeBishops(){
-        whitePieces.add(new Bishop(WHITE, typeOfPiece.BISHOP));
-        whitePieces.add(new Bishop(WHITE, typeOfPiece.BISHOP));
+        whitePieces.add(new Bishop(WHITE, typeOfPiece.BISHOP, whiteBishopPNGPath));
+        whitePieces.add(new Bishop(WHITE, typeOfPiece.BISHOP, whiteBishopPNGPath));
         
-        blackPieces.add(new Bishop(BLACK, typeOfPiece.BISHOP));
-        blackPieces.add(new Bishop(BLACK, typeOfPiece.BISHOP));
+        blackPieces.add(new Bishop(BLACK, typeOfPiece.BISHOP, blackBishopPNGPath));
+        blackPieces.add(new Bishop(BLACK, typeOfPiece.BISHOP, blackBishopPNGPath));
     }
     
     // Putbishops on starting squares
@@ -176,11 +190,11 @@ public class Board {
     
     // Make Rooks, add to ArrayLists
     private void makeRooks(){
-        whitePieces.add(new Rook(WHITE, typeOfPiece.ROOK));
-        whitePieces.add(new Rook(WHITE, typeOfPiece.ROOK));
+        whitePieces.add(new Rook(WHITE, typeOfPiece.ROOK, whiteRookPNGPath));
+        whitePieces.add(new Rook(WHITE, typeOfPiece.ROOK, whiteRookPNGPath));
         
-        blackPieces.add(new Rook(BLACK, typeOfPiece.ROOK));
-        blackPieces.add(new Rook(BLACK, typeOfPiece.ROOK));
+        blackPieces.add(new Rook(BLACK, typeOfPiece.ROOK, blackRookPNGPath));
+        blackPieces.add(new Rook(BLACK, typeOfPiece.ROOK, blackRookPNGPath));
     }
     
     // Put rooks on starting squares
@@ -198,8 +212,8 @@ public class Board {
     
     // Make Queens, add to ArrayLists
     private void makeQueens(){
-        whitePieces.add(new Queen(WHITE, typeOfPiece.QUEEN));
-        blackPieces.add(new Queen(BLACK, typeOfPiece.QUEEN));
+        whitePieces.add(new Queen(WHITE, typeOfPiece.QUEEN, whiteQueenPNGPath));
+        blackPieces.add(new Queen(BLACK, typeOfPiece.QUEEN, blackQueenPNGPath));
     }
     
     // Put queesn on starting squares
@@ -213,8 +227,8 @@ public class Board {
     
     // Make Kings, add to ArrayLists
     private void makeKings(){
-        whitePieces.add(new King(WHITE, typeOfPiece.KING));
-        blackPieces.add(new King(BLACK, typeOfPiece.KING));
+        whitePieces.add(new King(WHITE, typeOfPiece.KING, whiteKingPNGPath));
+        blackPieces.add(new King(BLACK, typeOfPiece.KING, blackKingPNGPath));
     }
     
     // Put Kings on starting squares

@@ -11,6 +11,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
@@ -18,7 +19,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
@@ -29,7 +29,6 @@ import javafx.stage.Stage;
  *
  * @author Scott
  */
-
 
 public class BoardGUI extends Application {
     final int DIMENSION = 8;
@@ -42,6 +41,7 @@ public class BoardGUI extends Application {
     ArrayList<Square> squares;
     Square[][] squaresFromBoard;
     Square target;
+    PieceTypeEnum typeOfPiece;
     
     @Override
     public void start(Stage primaryStage) {   
@@ -49,34 +49,66 @@ public class BoardGUI extends Application {
         /////////////////////////////////////////////////////////////
         // Experimenting with images
 //        Image king = new Image("/ChessPiecePNGS/BlackKing.png");
-//        ImageView v = new ImageView();
-//        v.setImage(king);
-        
+       ImageView v = new ImageView();
+//        v.setImage(king);     
         
         Pane canvas = new Pane();
-        canvas.setStyle("-fx-background-color: black;");
         canvas.setPrefSize(200,200);
-        Circle circle = new Circle(50,Color.BLUE);
-        circle.relocate(20, 20);
         Rectangle rectangle = new Rectangle(100,100,Color.RED);
         rectangle.relocate(70,70);
-        canvas.getChildren().addAll(circle,rectangle);
-        
+        Pawn whitePawn = new Pawn("white", typeOfPiece.PAWN, "ChessPiecePNGs/whitePawn.png");
+        whitePawn.relocate(200, 200);
+        whitePawn.paintCurrentImagePath();
+        whitePawn.setViewToCurrentImage();
+        canvas.getChildren().addAll(rectangle, whitePawn);
         
         // allow the label to be dragged around.
         final Delta dragDelta = new Delta();
+        final Delta start = new Delta();
+        
         rectangle.setOnMousePressed(new EventHandler<MouseEvent>() {
-          @Override public void handle(MouseEvent mouseEvent) {
-            // record a delta distance for the drag and drop operation.
-            dragDelta.x = rectangle.getLayoutX() - mouseEvent.getSceneX();
-            dragDelta.y = rectangle.getLayoutY() - mouseEvent.getSceneY();
-            rectangle.setCursor(Cursor.MOVE);
-          }
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                start.x = rectangle.getLayoutX();
+                start.y = rectangle.getLayoutY();
+                // record a delta distance for the drag and drop operation.
+                dragDelta.x = rectangle.getLayoutX() - mouseEvent.getSceneX();
+                dragDelta.y = rectangle.getLayoutY() - mouseEvent.getSceneY();
+                rectangle.setCursor(Cursor.MOVE);
+            }
         });
         
         rectangle.setOnMouseReleased(new EventHandler<MouseEvent>() {
           @Override public void handle(MouseEvent mouseEvent) {
             rectangle.setCursor(Cursor.HAND);
+            
+            double xDrop = rectangle.getLayoutX() + (SQUARE_WIDTH / 2);
+            double yDrop = rectangle.getLayoutY() + (SQUARE_HEIGHT / 2);
+            
+            Square target;
+            int count = 0;
+            
+            while (count < squares.size() && 
+                    !squares.get(count).contains(xDrop, yDrop)){
+                count++;
+            }
+            System.out.println("count: " + count);
+            
+            target = squares.get(count);
+            System.out.println("target | X: " + 
+                    target.getX() + " Y : " +
+                    target.getY());
+            
+            if (!target.getOccupied()){
+                System.out.println("!target.getOccupied()");
+                rectangle.setLayoutX(target.getX());
+                rectangle.setLayoutY(target.getY());
+            }
+            else{
+                System.out.println("else");
+                rectangle.setLayoutX(start.x);
+                rectangle.setLayoutY(start.y);
+            }
           }
         });
         
