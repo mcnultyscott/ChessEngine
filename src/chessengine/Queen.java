@@ -10,7 +10,10 @@ package chessengine;
  * @author Scott
  */
 public class Queen extends Piece{
-    public Queen(String col, PieceTypeEnum type){
+    String pathForPNG;
+    
+    public Queen(String col, PieceTypeEnum type, String path){
         super(col, type);
+        pathForPNG = path;
     }
 }

@@ -4,24 +4,40 @@
  * and open the template in the editor.
  */
 package chessengine;
+
 import java.util.ArrayList;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 /**
  *
  * @author Scott
  */
-public class Piece extends Rectangle {
+public class Piece extends Image {
     String color;
     Square currentSquare;
     String[] pieceStringList = {"Pawn", "Knight", "Bishop", "Rook", "Queen", "King"};
     PieceTypeEnum typeOfPiece;
     ArrayList<Square> moveSquares;// = new ArrayList<Square>();
     ArrayList<Square> attackSquares;// = new ArrayList<Square>();
+    ImageView view = new ImageView();
+    Image image;
+    String pathForPNG;
+    
+    public Piece(String col, PieceTypeEnum type){
+        color = col;
+        typeOfPiece = type;
+    }
     
     public Piece(String col, PieceTypeEnum type){
            color = col;
-           typeOfPiece = type;
+           typeOfPiece = type;      
+    }
+    
+    public Piece(String col, PieceTypeEnum type, String path){
+           color = col;
+           typeOfPiece = type;      
+           String pathForPNG = path;
     }
     
     public String getColor(){
@@ -59,6 +75,7 @@ public class Piece extends Rectangle {
     public void setAttackingSquares(ArrayList<Square> attack){
         attackSquares = attack;
     }
+   
     
     public String toString(){
         return getColor() +  " " + 

@@ -10,7 +10,10 @@ package chessengine;
  * @author Scott
  */
 public class Rook extends Piece{
-    public Rook(String col, PieceTypeEnum type){
+    String pathForPNG;
+    
+    public Rook(String col, PieceTypeEnum type, String path){
         super(col, type);
+        pathForPNG = path;
     }
 }
