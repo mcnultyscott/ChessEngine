@@ -35,8 +35,8 @@ public class BoardGUI extends Application {
     final int DIMENSION = 8;
     final int SQUARE_WIDTH = 100;
     final int SQUARE_HEIGHT = 100;
-    final int PIECE_WIDTH = 80;
-    final int PIECE_HEIGHT = 80;
+    final int PIECE_WIDTH = 70;
+    final int PIECE_HEIGHT = 70;
     final double STROKE_WIDTH = 50;
     final Font COORDINATE_SIZE = new Font(20);
     String[] fileLex = {"A", "B", "C", "D", "E", "F", "G", "H"};
@@ -61,16 +61,88 @@ public class BoardGUI extends Application {
         rectangle.relocate(70,70);
         Pawn whitePawn = new Pawn("white", typeOfPiece.PAWN, "ChessPiecePNGs/whitePawn.png");
         //whitePawn.relocate(200, 200);
-        im = whitePawn.getCurrentImage();
-        v.setImage(im);
-        v.setFitWidth(PIECE_WIDTH);
-        v.setFitHeight(PIECE_HEIGHT);
-        v.preserveRatioProperty();
-        canvas.getChildren().addAll(rectangle);
+        whitePawn.setImage(whitePawn.getCurrentImage());
+//        im = whitePawn.getCurrentImage();
+//        v.setImage(im);
+//        v.setFitWidth(PIECE_WIDTH);
+//        v.setFitHeight(PIECE_HEIGHT);
+        whitePawn.setFitWidth(PIECE_WIDTH);
+        whitePawn.setFitHeight(PIECE_HEIGHT);
+        whitePawn.preserveRatioProperty();
+        //canvas.getChildren().addAll(rectangle);
         
         // allow the label to be dragged around.
         final Delta dragDelta = new Delta();
         final Delta start = new Delta();
+        
+        whitePawn.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                start.x = whitePawn.getLayoutX();
+                start.y = whitePawn.getLayoutY();
+                // record a delta distance for the drag and drop operation.
+                dragDelta.x = whitePawn.getLayoutX() - mouseEvent.getSceneX();
+                dragDelta.y = whitePawn.getLayoutY() - mouseEvent.getSceneY();
+                whitePawn.setCursor(Cursor.MOVE);
+            }
+        });
+        
+        whitePawn.setOnMouseReleased(new EventHandler<MouseEvent>() {
+          @Override public void handle(MouseEvent mouseEvent) {
+            whitePawn.setCursor(Cursor.HAND);
+            
+            double xDrop = whitePawn.getLayoutX() + (SQUARE_WIDTH / 2);
+            double yDrop = whitePawn.getLayoutY() + (SQUARE_HEIGHT / 2);
+            
+            Square target;
+            int count = 0;
+            
+            while (count < squares.size() && 
+                    !squares.get(count).contains(xDrop, yDrop)){
+                count++;
+            }
+            System.out.println("count: " + count);
+            
+            target = squares.get(count);
+            System.out.println("target | X: " + 
+                    target.getX() + " Y : " +
+                    target.getY());
+            
+            if (!target.getOccupied()){
+                System.out.println("!target.getOccupied()");
+                whitePawn.setLayoutX(target.getX() + (SQUARE_WIDTH / 10));
+                whitePawn.setLayoutY(target.getY() + (SQUARE_HEIGHT / 10));
+            }
+            else{
+                System.out.println("else");
+                whitePawn.setLayoutX(start.x);
+                whitePawn.setLayoutY(start.y);
+            }
+          }
+        });
+        
+        whitePawn.setOnMouseDragged(new EventHandler<MouseEvent>() {
+          @Override public void handle(MouseEvent mouseEvent) {
+            whitePawn.setLayoutX(mouseEvent.getSceneX() + dragDelta.x);
+            whitePawn.setLayoutY(mouseEvent.getSceneY() + dragDelta.y);
+            
+            double xDrag = whitePawn.getLayoutX() + (SQUARE_WIDTH / 2);
+            double yDrag = whitePawn.getLayoutY() + (SQUARE_HEIGHT / 2);
+            
+            Square target;
+            int count = 0;
+            
+            while (count < squares.size() && 
+                    !squares.get(count).contains(xDrag, yDrag)){
+                count++;
+            }
+            
+//            target = squares.get(count);
+//            target.setFill(Color.BLUEVIOLET);
+          }
+        });
+        
+        //////////////////////////////////////////////
         
         rectangle.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
@@ -159,6 +231,7 @@ public class BoardGUI extends Application {
         
         root.getChildren().add(canvas);
         root.getChildren().add(v);
+        root.getChildren().add(whitePawn);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

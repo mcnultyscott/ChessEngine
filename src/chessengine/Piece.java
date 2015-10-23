@@ -13,7 +13,7 @@ import javafx.scene.image.ImageView;
  *
  * @author Scott
  */
-public class Piece {
+public class Piece extends ImageView{
     String color;
     Square currentSquare;
     String[] pieceStringList = {"Pawn", "Knight", "Bishop", "Rook", "Queen", "King"};
