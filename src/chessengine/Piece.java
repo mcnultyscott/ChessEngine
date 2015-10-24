@@ -71,6 +71,11 @@ public class Piece extends ImageView{
         attackSquares = attack;
     }
     
+    public Image getCurrentImage(){
+        image = new Image(pathForPNG);
+        return image;
+    }
+    
     @Override
     public String toString(){
         return getColor() +  " " + 

@@ -115,11 +115,11 @@ public class Board {
         makeKings();
         
         setPawnsOnSquares();
-        setWhiteOnSquares();
+        setKnightsOnSquares();
         setBishopsOnSquares();
         setRooksOnSquares();
-        setQueenOnSquares();
-        setWKingOnSquares();
+        setQueensOnSquares();
+        setKingsOnSquares();
     }
     
     // Create pawns, add to ArrayLists
@@ -137,10 +137,16 @@ public class Board {
             // White pawns on second rank
             squares[6][i].setOccupied(true);
             squares[6][i].setOccupyingPiece(whitePieces.get(i));
+            whitePieces.get(i).setCurrentSquare(squares[6][i]);
+            
+            Square s = whitePieces.get(i).getCurrentSquare();
+            
+            System.out.println(i + " | " +  "X: " + s.getRow() + " Y: " + s.getColumn());
             
             // Black pawns on seventh rank
             squares[1][i].setOccupied(true);
             squares[1][i].setOccupyingPiece(blackPieces.get(i));
+            blackPieces.get(i).setCurrentSquare(squares[1][i]);
         }
     }
     
@@ -154,16 +160,20 @@ public class Board {
     }
     
     // Put knights on starting squares
-    private void setWhiteOnSquares(){
+    private void setKnightsOnSquares(){
         squares[7][1].setOccupied(true);
         squares[7][1].setOccupyingPiece(whitePieces.get(8)); 
         squares[7][6].setOccupied(true);
         squares[7][6].setOccupyingPiece(whitePieces.get(9));
+        whitePieces.get(8).setCurrentSquare(squares[7][1]);
+        whitePieces.get(9).setCurrentSquare(squares[7][6]);
         
         squares[0][1].setOccupied(true);
         squares[0][1].setOccupyingPiece(blackPieces.get(8));
         squares[0][6].setOccupied(true);
         squares[0][6].setOccupyingPiece(blackPieces.get(9));
+        blackPieces.get(8).setCurrentSquare(squares[0][1]);
+        blackPieces.get(9).setCurrentSquare(squares[0][6]);
     }
     
     // Make bishops, add to ArrayLists
@@ -181,11 +191,15 @@ public class Board {
         squares[7][2].setOccupyingPiece(whitePieces.get(10));
         squares[7][5].setOccupied(true);
         squares[7][5].setOccupyingPiece(whitePieces.get(11));
+        whitePieces.get(10).setCurrentSquare(squares[7][2]);
+        whitePieces.get(11).setCurrentSquare(squares[7][5]);
         
         squares[0][2].setOccupied(true);
         squares[0][2].setOccupyingPiece(blackPieces.get(10));
         squares[0][5].setOccupied(true);
         squares[0][5].setOccupyingPiece(blackPieces.get(11));
+        blackPieces.get(10).setCurrentSquare(squares[0][2]);
+        blackPieces.get(11).setCurrentSquare(squares[7][5]);
     }
     
     // Make Rooks, add to ArrayLists
@@ -203,11 +217,15 @@ public class Board {
         squares[7][0].setOccupyingPiece(whitePieces.get(12)); 
         squares[7][7].setOccupied(true);
         squares[7][7].setOccupyingPiece(whitePieces.get(13)); 
+        whitePieces.get(12).setCurrentSquare(squares[7][0]);
+        whitePieces.get(13).setCurrentSquare(squares[7][7]);
         
         squares[0][0].setOccupied(true);
         squares[0][0].setOccupyingPiece(blackPieces.get(12)); 
         squares[0][7].setOccupied(true);
-        squares[0][7].setOccupyingPiece(blackPieces.get(13)); 
+        squares[0][7].setOccupyingPiece(blackPieces.get(13));
+        blackPieces.get(12).setCurrentSquare(squares[0][0]);
+        blackPieces.get(13).setCurrentSquare(squares[0][7]);
     }
     
     // Make Queens, add to ArrayLists
@@ -217,12 +235,14 @@ public class Board {
     }
     
     // Put queesn on starting squares
-    private void setQueenOnSquares(){
+    private void setQueensOnSquares(){
         squares[7][3].setOccupied(true);
         squares[7][3].setOccupyingPiece(whitePieces.get(14));
+        whitePieces.get(14).setCurrentSquare(squares[7][3]);
         
         squares[0][3].setOccupied(true);
         squares[0][3].setOccupyingPiece(blackPieces.get(14));
+        blackPieces.get(14).setCurrentSquare(squares[0][3]);
     }
     
     // Make Kings, add to ArrayLists
@@ -232,12 +252,14 @@ public class Board {
     }
     
     // Put Kings on starting squares
-    private void setWKingOnSquares(){
+    private void setKingsOnSquares(){
         squares[7][4].setOccupied(true);
         squares[7][4].setOccupyingPiece(whitePieces.get(15));
+        whitePieces.get(15).setCurrentSquare(squares[7][4]);
         
         squares[0][4].setOccupied(true);
         squares[0][4].setOccupyingPiece(blackPieces.get(15));
+        blackPieces.get(15).setCurrentSquare(squares[0][4]);
     }
     
     // Removes pieces from squares on board
