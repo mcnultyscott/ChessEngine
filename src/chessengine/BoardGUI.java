@@ -74,14 +74,11 @@ public class BoardGUI extends Application {
             whitePieceImages.add(pv); 
         }
         
+        // netbeans suggested changing for (<type> <name> : <list>) into stream
         whitePieceImages.stream().forEach((v) -> {
             givePieceEvents(v);
         });
         
-        // my version vs theirs
-//        for (PieceImageView v : whitePieceImages){
-//            givePieceEvents(v);
-//        }
         
         for (Piece blackPiece : blackPieces) {
             target = blackPiece.getCurrentSquare(); 
@@ -106,8 +103,6 @@ public class BoardGUI extends Application {
               
         giveSquaresColor(squares);
         root.getChildren().addAll(squares);
-        //root.getChildren().addAll(whitePieces);
-        //root.getChildren().addAll(blackPieces);
         addRankAndFileTexts(root);
         
         for (int i = 0; i < squares.size(); i++){
@@ -274,7 +269,7 @@ public class BoardGUI extends Application {
                         System.out.println("TARGET SQUARE OCCUPIED");
                                      
                         // move the image of the piece back to the 
-                        // starting pos
+                        // starting position
                         pv.setLayoutX(start.x);
                         pv.setLayoutY(start.y);
                     }
@@ -285,7 +280,6 @@ public class BoardGUI extends Application {
         pv.setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override 
             public void handle(MouseEvent mouseEvent) {
-                //System.out.println("setOnMouseDragged");
                 pv.setLayoutX(mouseEvent.getSceneX() + dragDelta.x);
                 pv.setLayoutY(mouseEvent.getSceneY() + dragDelta.y);
             }
@@ -299,7 +293,7 @@ public class BoardGUI extends Application {
         launch(args);
     }
     
-    // records relative x and y co-ordinates.
-  class Delta { double x, y; }
+// records relative x and y co-ordinates.
+class Delta { double x, y; }
     
 }
