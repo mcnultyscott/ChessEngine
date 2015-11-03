@@ -532,10 +532,8 @@ public class BoardGUI extends Application {
         @Override
             public void handle(MouseEvent mouseEvent) {
                 System.out.println("setOnMousePressed");
-//                start.x = pv.getLayoutX();
-//                start.y = pv.getLayoutY();
-                start.x = pv.getX();
-                start.y = pv.getY();
+                start.x = pv.getLayoutX();
+                start.y = pv.getLayoutY();
                 System.out.println("start.x: " + start.x + " | start.y: " + start.y);
                 // record a delta distance for the drag and drop operation.
                 dragDelta.x = pv.getLayoutX() - mouseEvent.getSceneX();
