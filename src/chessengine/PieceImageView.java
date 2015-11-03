@@ -23,8 +23,8 @@ public class PieceImageView extends ImageView{
         this.setPreserveRatio(true);
         this.setFitHeight(height);
         this.setFitWidth(width);
-        this.setX(x);
-        this.setY(y);
+        this.setLayoutX(x);
+        this.setLayoutY(y);
     }
     
     public Piece getPiece(){

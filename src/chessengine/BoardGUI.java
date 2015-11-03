@@ -584,6 +584,17 @@ public class BoardGUI extends Application {
                         System.out.println("else");
                         pv.setLayoutX(start.x);
                         pv.setLayoutY(start.y);
+                        
+                        int idx = whitePieceImages.indexOf(pv);
+                        Piece tmp = whitePieceImages.get(idx).getPiece();
+                        target.setOccupyingPiece(tmp);
+                        
+                        // set the piece's old sqaure to unoccupied.
+                        // set the pieces square and set the new square
+                        // to occupied
+                        tmp.getCurrentSquare().setOccupied(false);
+                        tmp.setCurrentSquare(target);
+                        tmp.getCurrentSquare().setOccupied(true);
                     }
                 }
             }
