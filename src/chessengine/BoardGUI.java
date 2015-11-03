@@ -44,6 +44,8 @@ public class BoardGUI extends Application {
     ArrayList<Square> squares;
     ArrayList<Piece> whitePieces;
     ArrayList<Piece> blackPieces;
+    ArrayList<PieceImageView> whitePieceImages = new ArrayList<PieceImageView>();
+    ArrayList<PieceImageView> blackPieceImages = new ArrayList<PieceImageView>();;
     Square[][] squaresFromBoard;
     Square target;
     PieceTypeEnum typeOfPiece;
@@ -51,14 +53,58 @@ public class BoardGUI extends Application {
     
     @Override
     public void start(Stage primaryStage) {   
+        Board board = new Board();
+        Group root = new Group();
+        Scene scene = new Scene(root, DIMENSION * SQUARE_WIDTH, 
+                                    DIMENSION * SQUARE_HEIGHT);
+        
+        whitePieces = board.getWhitePieces();
+        blackPieces = board.getBlackPieces();
+        
+        PieceImageView pv;        
+        for (Piece whitePiece : whitePieces) {
+            target = whitePiece.getCurrentSquare(); 
+            pv = new PieceImageView(whitePiece, PIECE_HEIGHT, PIECE_WIDTH, 
+                    Math.abs(DIMENSION - target.getColumn() - 1) * SQUARE_WIDTH + SQUARE_WIDTH / 8, 
+                    Math.abs(DIMENSION - target.getRow() - 1) * SQUARE_HEIGHT + SQUARE_WIDTH / 10);
+            
+            System.out.println(whitePiece.toString() + "\t| row: " +
+                    target.getRow() + "\t| column: " +
+                    target.getColumn());
+            whitePieceImages.add(pv); 
+        }
+        
+        for (PieceImageView v : whitePieceImages){
+            giveEvents(v);
+        }
+            
         
         /////////////////////////////////////////////////////////////
-        Pawn whitePawn = new Pawn("white", typeOfPiece.PAWN, "ChessPiecePNGs/whitePawn.png");
+        //Pawn whitePawn = new Pawn("white", typeOfPiece.PAWN, "ChessPiecePNGs/whitePawn.png");
         //whitePawn.relocate(200, 200);
-        whitePawn.setImage(whitePawn.getCurrentImage());
-        whitePawn.setFitWidth(PIECE_WIDTH);
-        whitePawn.setFitHeight(PIECE_HEIGHT);
-        whitePawn.preserveRatioProperty();     
+        
+        
+        //Piece whitePawn = new Pawn("white", typeOfPiece.PAWN, "ChessPiecePNGs/whitePawn.png");
+        //PieceImageView pv = new PieceImageView(whitePawn, PIECE_HEIGHT, PIECE_WIDTH, 200, 200);
+        
+        
+        //ImageView v = new ImageView("ChessPiecePNGs/whitePawn.png");
+        //ImageView v = new ImageView(pv.getImage());
+        
+        //ImageView vie = whitePawn.getImageView();
+        /////////////////////////////////////////////////////////////////////////
+        // TEST
+
+        
+//        pv.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//                public void handle(MouseEvent event) {
+//                    System.out.println("CLICKED");
+//                }    
+//            }
+//        );
+       
+/////////////////////////////////////////////////////////////////////////
+
         
         //////////////////////////////////////////////
 //        
@@ -131,71 +177,67 @@ public class BoardGUI extends Application {
      
         //////////////////////////////////////////////////////////
         
-        Board board = new Board();
+        
         board.setUpNewGame();
         squaresFromBoard = board.getSquares();
         squares = new ArrayList<Square>();
         convertFrom2DArrayToArrayList(squares, squaresFromBoard);
         
-        whitePieces = board.getWhitePieces();
-        blackPieces = board.getBlackPieces();
+        //setPieceImages(whitePieceImages, whitePieces);
+        //setPieceImages(blackPieces);
         
-        Square sq;
-        for (int j = 0; j < whitePieces.size(); j++){
-            sq = whitePieces.get(j).getCurrentSquare();
-            
-            System.out.println(j + " | " +  "X: " + sq.getRow() + " Y: " + sq.getColumn());
-        }
-        
-        setPieceImages(whitePieces);
-        setPieceImages(blackPieces);
-        
-        Group root = new Group();
-        Scene scene = new Scene(root, DIMENSION * SQUARE_WIDTH, 
-                                    DIMENSION * SQUARE_HEIGHT);
-        
+        //root.getChildren().addAll(whitePieceImages);
+              
         giveSquaresColor(squares);
         root.getChildren().addAll(squares);
         //root.getChildren().addAll(whitePieces);
         //root.getChildren().addAll(blackPieces);
         addRankAndFileTexts(root);
         
-        Piece randomPiece = whitePieces.get(0);
-        givePieceEventHandling(randomPiece);
-        root.getChildren().add(randomPiece);
-        
         for (int i = 0; i < squares.size(); i++){
             giveSquareEventHandling(squares.get(i));
         }
         
-        //root.getChildren().add(canvas);
         //root.getChildren().add(v);
-        root.getChildren().add(whitePawn);
+        //root.getChildren().add(pv);
+        root.getChildren().addAll(whitePieceImages);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
     
-    private void setPieceImages(ArrayList<Piece> pieces){
+    private void setPieceImages(ArrayList<ImageView> views, ArrayList<Piece> pieces){
+        ImageView v;
+        
         System.out.println(DIVIDOR);
+        
         for (int i = 0; i < pieces.size(); i++){
-            Piece p = pieces.get(i);
-            Square s = p.getCurrentSquare();
+            v = new ImageView(pieces.get(i).getCurrentImage());
+            views.add(v);
             
-            //System.out.println(i + " | " +  "X: " + s.getRow() + " Y: " + s.getColumn());
-                    
-            p.setImage(p.getCurrentImage()); 
-            p.setFitWidth(PIECE_WIDTH);
-            p.setFitHeight(PIECE_HEIGHT);
-            p.preserveRatioProperty();
+            v.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                public void handle(MouseEvent event) {
+                    System.out.println("CLICKED | " + v.);
+                }    
+            });
             
-            //System.out.println("S | X: " + s.getLayoutX() + " Y: " + s.getLayoutY());
-            System.out.println("X: " + p.getLayoutX());
-            System.out.println("Y: " + p.getLayoutY()); 
-            
-            p.setLayoutX(s.getX() * DIMENSION);
-            System.out.println("X: " + p.getLayoutX());
-            p.setLayoutY(s.getX() * DIMENSION);
-            System.out.println("Y: " + p.getLayoutY());        
+//            Piece p = pieces.get(i);
+//            Square s = p.getCurrentSquare();
+//            
+//            System.out.println(i + " | " +  "X: " + s.getRow() + " Y: " + s.getColumn());
+//                    
+//            p.setImage(p.getCurrentImage()); 
+//            p.setFitWidth(PIECE_WIDTH);
+//            p.setFitHeight(PIECE_HEIGHT);
+//            p.preserveRatioProperty();
+//            
+//            System.out.println("S | X: " + s.getLayoutX() + " Y: " + s.getLayoutY());
+//            System.out.println("X: " + p.getLayoutX());
+//            System.out.println("Y: " + p.getLayoutY()); 
+//            
+//            p.setLayoutX(s.getX() * DIMENSION);
+//            System.out.println("X: " + p.getLayoutX());
+//            p.setLayoutY(s.getX() * DIMENSION);
+//            System.out.println("Y: " + p.getLayoutY());        
         }
     }
     
@@ -241,232 +283,114 @@ public class BoardGUI extends Application {
         } // end i for
     }
     
-    private void givePieceEventHandling (Piece piece){
-        System.out.println("givePieceEventHandling");
-        
-        // allow the label to be dragged around.
-        final Delta dragDelta = new Delta();
-        final Delta start = new Delta();
-        System.out.println("here");
-        
-        piece.setOnMousePressed(new EventHandler<MouseEvent>() {       
-            
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                System.out.println("setOnMousePressed");
-                start.x = piece.getLayoutX();
-                start.y = piece.getLayoutY();
-                // record a delta distance for the drag and drop operation.
-                dragDelta.x = piece.getLayoutX() - mouseEvent.getSceneX();
-                dragDelta.y = piece.getLayoutY() - mouseEvent.getSceneY();
-                piece.setCursor(Cursor.MOVE);
-            }
-        });
-        
-        piece.setOnMouseReleased(new EventHandler<MouseEvent>() {
-          @Override public void handle(MouseEvent mouseEvent) {
-            System.out.println("setOnMouseReleased");
-            piece.setCursor(Cursor.HAND);
-            
-            double xDrop = piece.getLayoutX() + (SQUARE_WIDTH / 2);
-            double yDrop = piece.getLayoutY() + (SQUARE_HEIGHT / 2);
-            
-            Square target;
-            int count = 0;
-            
-            while (count < squares.size() && 
-                    !squares.get(count).contains(xDrop, yDrop)){
-                count++;
-            }
-            
-            // Checks if the piece is brought off the board.
-            // If the piece is, put it back to its starting posision.
-            if (count >= squares.size()){
-                piece.setLayoutX(start.x);
-                piece.setLayoutY(start.y);
-            }
-            else{            
-                System.out.println("count: " + count);
-
-                target = squares.get(count);
-                System.out.println("target | X: " + 
-                        target.getX() + " Y : " +
-                        target.getY());
-
-                //if (!target.getOccupied()){
-                    System.out.println("!target.getOccupied()");
-                    piece.setLayoutX(target.getX() + (SQUARE_WIDTH / 10));
-                    piece.setLayoutY(target.getY() + (SQUARE_HEIGHT / 10));
-//                }
-//                else{
-//                    System.out.println("else");
-//                    piece.setLayoutX(start.x);
-//                    piece.setLayoutY(start.y);
-//                }
-            }
-          }
-        });
-        
-        piece.setOnMouseDragged(new EventHandler<MouseEvent>() {
-          @Override 
-          public void handle(MouseEvent mouseEvent) {
-                System.out.println("setOnMouseDragged");
-                piece.setLayoutX(mouseEvent.getSceneX() + dragDelta.x);
-                piece.setLayoutY(mouseEvent.getSceneY() + dragDelta.y);
-            
-                double xDrag = piece.getLayoutX() + (SQUARE_WIDTH / 2);
-                double yDrag = piece.getLayoutY() + (SQUARE_HEIGHT / 2);
-                
-                Square target;
-                int count = 0;
-
-                while (count < squares.size() && 
-                        !squares.get(count).contains(xDrag, yDrag)){
-                    count++;
-                }
-            
-//              target = squares.get(count);
-//              target.setFill(Color.BLUEVIOLET);
-            }
-        });
-        
-        piece.setOnMouseClicked(new EventHandler<MouseEvent>() {
-          @Override 
-          public void handle(MouseEvent mouseEvent) {
-                System.out.println("setOnMouseClicked");
-                
-                Square s = piece.getCurrentSquare();
-                System.out.println("X: " + s.getRow() + " Y: " + s.getColumn());
-//              target = squares.get(count);
-//              target.setFill(Color.BLUEVIOLET);
-            }
-        });
-    
-        
-//        piece.setOnDragDetected(new EventHandler <MouseEvent>() {
-//            public void handle(MouseEvent event) {
-//                Piece piece;
-//                System.out.println("OnDragDetected| " + 
-//                        "X: " + piece.getX() +
-//                        " Y: " + piece.getY());
+//    private void givePieceEventHandling (Piece piece){
+//        System.out.println("givePieceEventHandling");
+//        
+//        // allow the label to be dragged around.
+//        final Delta dragDelta = new Delta();
+//        final Delta start = new Delta();
+//        
+//        piece.setOnMousePressed(new EventHandler<MouseEvent>() {
+//            
+//            @Override
+//            public void handle(MouseEvent mouseEvent) {
+//                System.out.println("setOnMousePressed");
+//                start.x = piece.getLayoutX();
+//                start.y = piece.getLayoutY();
+//                // record a delta distance for the drag and drop operation.
+//                dragDelta.x = piece.getLayoutX() - mouseEvent.getSceneX();
+//                dragDelta.y = piece.getLayoutY() - mouseEvent.getSceneY();
+//                piece.setCursor(Cursor.MOVE);
+//            }
+//        });
+//        
+//        piece.setOnMouseReleased(new EventHandler<MouseEvent>() {
+//          @Override public void handle(MouseEvent mouseEvent) {
+//            System.out.println("setOnMouseReleased");
+//            piece.setCursor(Cursor.HAND);
+//            
+//            double xDrop = piece.getLayoutX() + (SQUARE_WIDTH / 2);
+//            double yDrop = piece.getLayoutY() + (SQUARE_HEIGHT / 2);
+//            
+//            Square target;
+//            int count = 0;
+//            
+//            while (count < squares.size() && 
+//                    !squares.get(count).contains(xDrop, yDrop)){
+//                count++;
+//            }
+//            
+//            // Checks if the piece is brought off the board.
+//            // If the piece is, put it back to its starting posision.
+//            if (count >= squares.size()){
+//                piece.setLayoutX(start.x);
+//                piece.setLayoutY(start.y);
+//            }
+//            else{            
+//                System.out.println("count: " + count);
+//
+//                target = squares.get(count);
+//                System.out.println("target | X: " + 
+//                        target.getX() + " Y : " +
+//                        target.getY());
+//
+//                //if (!target.getOccupied()){
+//                    System.out.println("!target.getOccupied()");
+//                    piece.setLayoutX(target.getX() + (SQUARE_WIDTH / 10));
+//                    piece.setLayoutY(target.getY() + (SQUARE_HEIGHT / 10));
+////                }
+////                else{
+////                    System.out.println("else");
+////                    piece.setLayoutX(start.x);
+////                    piece.setLayoutY(start.y);
+////                }
+//            }
+//          }
+//        });
+//        
+//        piece.setOnMouseDragged(new EventHandler<MouseEvent>() {
+//          @Override 
+//          public void handle(MouseEvent mouseEvent) {
+//                System.out.println("setOnMouseDragged");
+//                piece.setLayoutX(mouseEvent.getSceneX() + dragDelta.x);
+//                piece.setLayoutY(mouseEvent.getSceneY() + dragDelta.y);
+//            
+//                double xDrag = piece.getLayoutX() + (SQUARE_WIDTH / 2);
+//                double yDrag = piece.getLayoutY() + (SQUARE_HEIGHT / 2);
 //                
-//                if (piece.getOccupied()){
-//                    piece = piece.getOccupyingPiece();
-//                    
-//                    //Dragboard db = piece.startDragAndDrop(TransferMode.ANY);
-//                    Dragboard db = square.startDragAndDrop(TransferMode.ANY);
+//                Square target;
+//                int count = 0;
 //
-//                    ClipboardContent content = new ClipboardContent();
-//                    
-//                    // What should really be put on the clipboard is the 
-//                    // picture for the piece. What is here is just a test.
-//                    //content.putString("Piece: " + piece.toString());
-//                    System.out.println("Piece: " + piece.toString());
-//                    db.setContent(content);
+//                while (count < squares.size() && 
+//                        !squares.get(count).contains(xDrag, yDrag)){
+//                    count++;
 //                }
-//                else{
-//                    System.out.println("No piece");
-//                }
-//
-//                event.consume();
+//            
+////              target = squares.get(count);
+////              target.setFill(Color.BLUEVIOLET);
+//            }
+//        });
+//        
+//        piece.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//          @Override 
+//          public void handle(MouseEvent mouseEvent) {
+//                System.out.println("setOnMouseClicked");
+//                
+//                Square s = piece.getCurrentSquare();
+//                System.out.println("X: " + s.getRow() + " Y: " + s.getColumn());
+////              target = squares.get(count);
+////              target.setFill(Color.BLUEVIOLET);
 //            }
 //        });
 //    
-//
-//        square.setOnDragOver(new EventHandler <DragEvent>() {
-//            public void handle(DragEvent event) {
-//                /* data is dragged over the rect */
-//                square.setStrokeType(StrokeType.INSIDE);
-//                square.setStrokeWidth(STROKE_WIDTH);
-//                System.out.println("OnDragOver: " + 
-//                        "X: " + square.getX() +
-//                        " Y: " + square.getY());
-//                //System.out.println("onDragOver");
-//
-//                /* accept it only if it is  not dragged from the same node 
-//                 * and if it has a string data */
-//                if (event.getGestureSource() != square &&
-//                        event.getDragboard().hasString()) {
-//                    /* allow for both copying and moving, whatever user chooses */
-//                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-//                }
-//
-//                event.consume();
-//            }
-//        });
-//
-//        square.setOnDragEntered(new EventHandler <DragEvent>() {
-//            public void handle(DragEvent event) {
-//                /* the drag-and-drop gesture entered the rect */
-//                System.out.println("OnDragEntered: " + 
-//                                "X: " + square.getX() +
-//                                " Y: " + square.getY());
-//                //square.setFill(Color.BLACK);
-//                square.setStrokeType(StrokeType.INSIDE);
-//                square.setStrokeWidth(STROKE_WIDTH);
-//
-//                /* show to the user that it is an actual gesture rect */
-////                        if (event.getGestureSource() != rect &&
-////                                event.getDragboard().hasString()) {
-////                            rect.setFill(Color.GREEN);
-////                        }
-//
-//                event.consume();
-//            }
-//        });
-//
-//        square.setOnDragExited(new EventHandler <DragEvent>() {
-//            public void handle(DragEvent event) {
-//                /* mouse moved away, remove the graphical cues */
-//                square.setStrokeType(null);
-//                square.setStrokeWidth(0);
-//                //rect.setFill(Color.WHITE);
-//
-//                event.consume();
-//            }
-//        });
-        
-//        square.setOnDragDropped(new EventHandler <DragEvent>() {
-//            public void handle(DragEvent event) {
-//                /* data dropped */
-//                System.out.println("Dropped: " + 
-//                        "X: " + rect.getX() +
-//                        "Y: " + rect.getY());
-//                /* if there is a string data on dragboard, read it and use it */
-//                Dragboard db = event.getDragboard();
-//                boolean success = false;
-//                if (db.hasString()) {
-////                            rect.setText(db.getString());
-//                    success = true;
-//                }
-//                /* let the rect know whether the string was successfully 
-//                 * transferred and used */
-//                event.setDropCompleted(success);
-//
-//                event.consume();
-//            }
-//        });
-
-//        rect.setOnDragDone(new EventHandler <DragEvent>() {
-//            public void handle(DragEvent event) {
-//                /* the drag-and-drop gesture ended */
-//                System.out.println("onDragDone");
-//                /* if the data was successfully moved, clear it */
-//                if (event.getTransferMode() == TransferMode.MOVE) {
-////                            rect.setText("");
-//                }
-//
-//                event.consume();
-//            }
-//        });
-    }
+//    }
     
     private void giveSquareEventHandling (Square square){
         System.out.println("giveSquareEventHandling");
         square.setOnMouseClicked(new EventHandler <MouseEvent>() {
             
             public void handle(MouseEvent event) {
-                System.out.println("setOnMouseClicked");
+                System.out.println("setOnMouseClicked on square");
                 
             }
         });
@@ -474,7 +398,7 @@ public class BoardGUI extends Application {
         square.setOnDragDetected(new EventHandler <MouseEvent>() {
             public void handle(MouseEvent event) {
                 Piece piece;
-                System.out.println("OnDragDetected| " + 
+                System.out.println("OnDragDetected on square | " + 
                         "X: " + square.getX() +
                         " Y: " + square.getY());
                 
@@ -525,7 +449,7 @@ public class BoardGUI extends Application {
         square.setOnDragEntered(new EventHandler <DragEvent>() {
             public void handle(DragEvent event) {
                 /* the drag-and-drop gesture entered the rect */
-                System.out.println("OnDragEntered: " + 
+                System.out.println("OnDragEntered on square: " + 
                                 "X: " + square.getX() +
                                 " Y: " + square.getY());
                 //square.setFill(Color.BLACK);
@@ -556,7 +480,7 @@ public class BoardGUI extends Application {
         square.setOnDragDropped(new EventHandler <DragEvent>() {
             public void handle(DragEvent event) {
                 /* data dropped */
-                System.out.println("Dropped: " + 
+                System.out.println("Dropped on square: " + 
                         "X: " + square.getX() +
                         "Y: " + square.getY());
                 /* if there is a string data on dragboard, read it and use it */
@@ -577,7 +501,7 @@ public class BoardGUI extends Application {
         square.setOnDragDone(new EventHandler <DragEvent>() {
             public void handle(DragEvent event) {
                 /* the drag-and-drop gesture ended */
-                System.out.println("onDragDone");
+                System.out.println("onDragDone on square");
                 /* if the data was successfully moved, clear it */
 //                if (event.getTransferMode() == TransferMode.MOVE) {
 //                            square.setText("");
@@ -597,6 +521,93 @@ public class BoardGUI extends Application {
                 squares.add(s[i][j]);
             }
         }
+    }
+    
+    public void giveEvents(PieceImageView pv){
+        final Delta dragDelta = new Delta();
+        final Delta start = new Delta();
+        
+        pv.setOnMousePressed(new EventHandler<MouseEvent>() {
+            
+        @Override
+            public void handle(MouseEvent mouseEvent) {
+                System.out.println("setOnMousePressed");
+                start.x = pv.getLayoutX();
+                start.y = pv.getLayoutY();
+                // record a delta distance for the drag and drop operation.
+                dragDelta.x = pv.getLayoutX() - mouseEvent.getSceneX();
+                dragDelta.y = pv.getLayoutY() - mouseEvent.getSceneY();
+                pv.setCursor(Cursor.MOVE);
+            }
+        });
+        
+        pv.setOnMouseReleased(new EventHandler<MouseEvent>() {
+            @Override 
+            public void handle(MouseEvent mouseEvent) {
+                System.out.println("setOnMouseReleased");
+                pv.setCursor(Cursor.HAND);
+
+                double xDrop = pv.getLayoutX() + (SQUARE_WIDTH / 2);
+                double yDrop = pv.getLayoutY() + (SQUARE_HEIGHT / 2);
+
+                Square target;
+                int count = 0;
+
+                while (count < squares.size() && 
+                    !squares.get(count).contains(xDrop, yDrop)){
+                    count++;
+                }
+
+                // Checks if the piece is brought off the board.
+                // If the piece is, put it back to its starting posision.
+                if (count >= squares.size()){
+                    pv.setLayoutX(start.x);
+                    pv.setLayoutY(start.y);
+                }
+                else{            
+                    System.out.println("count: " + count);
+
+                    target = squares.get(count);
+                    System.out.println("target | X: " + 
+                            target.getX() + " Y : " +
+                            target.getY());
+
+                    if (!target.getOccupied()){
+                        System.out.println("!target.getOccupied()");
+                        pv.setLayoutX(target.getX() + (SQUARE_WIDTH / 10));
+                        pv.setLayoutY(target.getY() + (SQUARE_HEIGHT / 10));
+                    }
+                    else{
+                        System.out.println("else");
+                        pv.setLayoutX(start.x);
+                        pv.setLayoutY(start.y);
+                    }
+                }
+            }
+        });
+        
+        pv.setOnMouseDragged(new EventHandler<MouseEvent>() {
+          @Override 
+          public void handle(MouseEvent mouseEvent) {
+                System.out.println("setOnMouseDragged");
+                pv.setLayoutX(mouseEvent.getSceneX() + dragDelta.x);
+                pv.setLayoutY(mouseEvent.getSceneY() + dragDelta.y);
+
+                double xDrag = pv.getLayoutX() + (SQUARE_WIDTH / 2);
+                double yDrag = pv.getLayoutY() + (SQUARE_HEIGHT / 2);
+
+                Square target;
+                int count = 0;
+
+                while (count < squares.size() && 
+                        !squares.get(count).contains(xDrag, yDrag)){
+                    count++;
+                }
+
+//              target = squares.get(count);
+//              target.setFill(Color.BLUEVIOLET);
+            }
+        });
     }
     
     /**
