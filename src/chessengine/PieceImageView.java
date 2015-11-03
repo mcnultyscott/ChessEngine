@@ -5,7 +5,7 @@
  */
 package chessengine;
 
-import javafx.scene.Node;
+import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 /**
@@ -25,6 +25,7 @@ public class PieceImageView extends ImageView{
         this.setFitWidth(width);
         this.setLayoutX(x);
         this.setLayoutY(y);
+        this.setCursor(Cursor.HAND);
     }
     
     public Piece getPiece(){

@@ -195,7 +195,7 @@ public class Board {
         squares[0][5].setOccupied(true);
         squares[0][5].setOccupyingPiece(blackPieces.get(11));
         blackPieces.get(10).setCurrentSquare(squares[0][2]);
-        blackPieces.get(11).setCurrentSquare(squares[7][5]);
+        blackPieces.get(11).setCurrentSquare(squares[0][5]);
     }
     
     // Make Rooks, add to ArrayLists
