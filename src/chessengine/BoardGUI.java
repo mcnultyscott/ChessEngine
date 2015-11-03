@@ -251,6 +251,12 @@ public class BoardGUI extends Application {
                         
                         Piece piece = pv.getPiece();
                         
+                        for (Square s : piece.getPossibleMoves()){
+                            System.out.println("square |\trow: " +
+                                    s.getRow() + "\tcolumn: " +
+                                    s.getColumn());
+                        }
+                        
                         // if the target square is within the possible moves
                         // of the piece, move it
                         if (piece.getPossibleMoves().contains(targetSquare)){
@@ -280,6 +286,11 @@ public class BoardGUI extends Application {
                                 targetSquare.getColumn() + "\toccupied: " +
                                 targetSquare.getOccupied());
                         } 
+                        else{
+                            System.out.println("target square not in possible moves");
+                            pv.setLayoutX(start.x);
+                            pv.setLayoutY(start.y);
+                        }
                     }
                     else{
                         System.out.println("TARGET SQUARE OCCUPIED");
