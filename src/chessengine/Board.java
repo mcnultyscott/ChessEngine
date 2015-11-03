@@ -17,7 +17,6 @@ public class Board {
     private final int DIMENSION = 8;  
     final int SQUARE_WIDTH = 100;
     final int SQUARE_HEIGHT = 100;
-    PieceTypeEnum typeOfPiece;
     Square target;
     
     // Paths to png files
@@ -125,8 +124,8 @@ public class Board {
     // Create pawns, add to ArrayLists
     private void makePawns(){
         for (int i = 0; i < 8; i++){
-            whitePieces.add(new Pawn(WHITE, typeOfPiece.PAWN, whitePawnPNGPath));
-            blackPieces.add(new Pawn(BLACK, typeOfPiece.PAWN, blackPawnPNGPath));
+            whitePieces.add(new Pawn(WHITE, PieceTypeEnum.PAWN, whitePawnPNGPath));
+            blackPieces.add(new Pawn(BLACK, PieceTypeEnum.PAWN, blackPawnPNGPath));
         }
     }
     
@@ -148,11 +147,11 @@ public class Board {
     
     // Make knights, add to ArrayLists 
     private void makeKnights(){
-        whitePieces.add(new Knight(WHITE, typeOfPiece.KNIGHT, whiteKnightPNGPath));
-        whitePieces.add(new Knight(WHITE, typeOfPiece.KNIGHT, whiteKnightPNGPath));
+        whitePieces.add(new Knight(WHITE, PieceTypeEnum.KNIGHT, whiteKnightPNGPath));
+        whitePieces.add(new Knight(WHITE, PieceTypeEnum.KNIGHT, whiteKnightPNGPath));
         
-        blackPieces.add(new Knight(BLACK, typeOfPiece.KNIGHT, blackKnightPNGPath));
-        blackPieces.add(new Knight(BLACK, typeOfPiece.KNIGHT, blackKnightPNGPath));
+        blackPieces.add(new Knight(BLACK, PieceTypeEnum.KNIGHT, blackKnightPNGPath));
+        blackPieces.add(new Knight(BLACK, PieceTypeEnum.KNIGHT, blackKnightPNGPath));
     }
     
     // Put knights on starting squares
@@ -174,11 +173,11 @@ public class Board {
     
     // Make bishops, add to ArrayLists
     private void makeBishops(){
-        whitePieces.add(new Bishop(WHITE, typeOfPiece.BISHOP, whiteBishopPNGPath));
-        whitePieces.add(new Bishop(WHITE, typeOfPiece.BISHOP, whiteBishopPNGPath));
+        whitePieces.add(new Bishop(WHITE, PieceTypeEnum.BISHOP, whiteBishopPNGPath));
+        whitePieces.add(new Bishop(WHITE, PieceTypeEnum.BISHOP, whiteBishopPNGPath));
         
-        blackPieces.add(new Bishop(BLACK, typeOfPiece.BISHOP, blackBishopPNGPath));
-        blackPieces.add(new Bishop(BLACK, typeOfPiece.BISHOP, blackBishopPNGPath));
+        blackPieces.add(new Bishop(BLACK, PieceTypeEnum.BISHOP, blackBishopPNGPath));
+        blackPieces.add(new Bishop(BLACK, PieceTypeEnum.BISHOP, blackBishopPNGPath));
     }
     
     // Putbishops on starting squares
@@ -200,11 +199,11 @@ public class Board {
     
     // Make Rooks, add to ArrayLists
     private void makeRooks(){
-        whitePieces.add(new Rook(WHITE, typeOfPiece.ROOK, whiteRookPNGPath));
-        whitePieces.add(new Rook(WHITE, typeOfPiece.ROOK, whiteRookPNGPath));
+        whitePieces.add(new Rook(WHITE, PieceTypeEnum.ROOK, whiteRookPNGPath));
+        whitePieces.add(new Rook(WHITE, PieceTypeEnum.ROOK, whiteRookPNGPath));
         
-        blackPieces.add(new Rook(BLACK, typeOfPiece.ROOK, blackRookPNGPath));
-        blackPieces.add(new Rook(BLACK, typeOfPiece.ROOK, blackRookPNGPath));
+        blackPieces.add(new Rook(BLACK, PieceTypeEnum.ROOK, blackRookPNGPath));
+        blackPieces.add(new Rook(BLACK, PieceTypeEnum.ROOK, blackRookPNGPath));
     }
     
     // Put rooks on starting squares
@@ -226,8 +225,8 @@ public class Board {
     
     // Make Queens, add to ArrayLists
     private void makeQueens(){
-        whitePieces.add(new Queen(WHITE, typeOfPiece.QUEEN, whiteQueenPNGPath));
-        blackPieces.add(new Queen(BLACK, typeOfPiece.QUEEN, blackQueenPNGPath));
+        whitePieces.add(new Queen(WHITE, PieceTypeEnum.QUEEN, whiteQueenPNGPath));
+        blackPieces.add(new Queen(BLACK, PieceTypeEnum.QUEEN, blackQueenPNGPath));
     }
     
     // Put queesn on starting squares
@@ -243,8 +242,8 @@ public class Board {
     
     // Make Kings, add to ArrayLists
     private void makeKings(){
-        whitePieces.add(new King(WHITE, typeOfPiece.KING, whiteKingPNGPath));
-        blackPieces.add(new King(BLACK, typeOfPiece.KING, blackKingPNGPath));
+        whitePieces.add(new King(WHITE, PieceTypeEnum.KING, whiteKingPNGPath));
+        blackPieces.add(new King(BLACK, PieceTypeEnum.KING, blackKingPNGPath));
     }
     
     // Put Kings on starting squares
@@ -279,7 +278,7 @@ public class Board {
     
     // Given a piece the possible squares the piece can
     // move to will be calculated.
-    private void calcMovementSquares (Piece piece){
+    public void calcMovementSquares (Piece piece){
         ArrayList<Square> moves = new ArrayList<Square>();
         
         switch (piece.getPieceType()){
@@ -348,37 +347,9 @@ public class Board {
         pawn.setPossibleMoves(moves);
     }
     
-    // TODO: This needs to be better; it looks very ugly.
-    // Think of better way to get the potential moves.
     private void calcKnightMoves(Piece piece, ArrayList<Square> moves){
         target = piece.getCurrentSquare();
-        int row = target.getRow();
-        int column = target.getColumn();    
         
-        int[] newUpDownRows = {row + 2, row - 2};
-        int[] newLeftRightRows = {row + 1, row - 1};
-        int[] newUpDownColumns = {column + 2, column - 2};
-        int[] newLeftRightColumns = {column + 1, column - 1};
-        
-        for (int i = 0; i < newUpDownRows.length; i++){
-            for (int j = 0; j < newLeftRightColumns.length; j++){
-                if (newUpDownRows[i] <= DIMENSION && newLeftRightColumns[j] <= DIMENSION){
-                    if (squares[newUpDownRows[i]][newLeftRightColumns[j]].getOccupied()){
-                        moves.add(squares[newUpDownRows[i]][newLeftRightColumns[j]]);
-                    }
-                }
-            }
-        }
-        
-        for (int i = 0; i < newLeftRightRows.length; i++){
-            for (int j = 0; j < newUpDownColumns.length; j++){
-                if (newLeftRightRows[i] <= DIMENSION && newUpDownColumns[j] <= DIMENSION){
-                    if (squares[newLeftRightRows[i]][newUpDownColumns[j]].getOccupied()){
-                        moves.add(squares[newLeftRightRows[i]][newUpDownColumns[j]]);
-                    }
-                }
-            }
-        }
     }
     
     private void calcBishopMoves(Piece piece, ArrayList<Square> moves){
