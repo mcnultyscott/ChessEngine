@@ -5,9 +5,6 @@
  */
 package chessengine;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-
 /**
  *
  * @author Scott
@@ -20,6 +17,7 @@ public class Pawn extends Piece{
     public Pawn(String col, PieceTypeEnum type, String path){
         super(col, type);
         pathForPNG = path;
+        
     }
     
     public void setHasMoved(Boolean move){
@@ -36,13 +34,6 @@ public class Pawn extends Piece{
     
     public Boolean getEnPassantable (){
         return enPassantable;
-    }
-    
-    public Image getCurrentImage(){
-        image = new Image(pathForPNG);
-        return image;
-    }
-    
-    
+    }    
 }
 

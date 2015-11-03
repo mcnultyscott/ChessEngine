@@ -139,10 +139,6 @@ public class Board {
             squares[6][i].setOccupyingPiece(whitePieces.get(i));
             whitePieces.get(i).setCurrentSquare(squares[6][i]);
             
-            Square s = whitePieces.get(i).getCurrentSquare();
-            
-            System.out.println(i + " | " +  "X: " + s.getRow() + " Y: " + s.getColumn());
-            
             // Black pawns on seventh rank
             squares[1][i].setOccupied(true);
             squares[1][i].setOccupyingPiece(blackPieces.get(i));

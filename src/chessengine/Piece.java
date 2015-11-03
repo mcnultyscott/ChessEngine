@@ -13,15 +13,13 @@ import javafx.scene.image.ImageView;
  *
  * @author Scott
  */
-public class Piece extends ImageView{
+public class Piece{
     String color;
     Square currentSquare;
     String[] pieceStringList = {"Pawn", "Knight", "Bishop", "Rook", "Queen", "King"};
     PieceTypeEnum typeOfPiece;
     ArrayList<Square> moveSquares;
     ArrayList<Square> attackSquares;
-    ImageView view = new ImageView();
-    Image image;
     String pathForPNG;
     
     public Piece(String col, PieceTypeEnum type){
@@ -32,7 +30,7 @@ public class Piece extends ImageView{
     public Piece(String col, PieceTypeEnum type, String path){
            color = col;
            typeOfPiece = type;      
-           String pathForPNG = path;
+           pathForPNG = path;
     }
     
     public String getColor(){
@@ -69,12 +67,7 @@ public class Piece extends ImageView{
     
     public void setAttackingSquares(ArrayList<Square> attack){
         attackSquares = attack;
-    }
-    
-    public Image getCurrentImage(){
-        image = new Image(pathForPNG);
-        return image;
-    }
+    }    
     
     @Override
     public String toString(){
