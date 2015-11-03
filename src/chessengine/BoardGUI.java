@@ -48,12 +48,11 @@ public class BoardGUI extends Application {
     ArrayList<PieceImageView> blackPieceImages = new ArrayList<PieceImageView>();;
     Square[][] squaresFromBoard;
     Square target;
-    PieceTypeEnum typeOfPiece;
     String DIVIDOR = "--------------------------";
     
     @Override
     public void start(Stage primaryStage) {   
-        Board board = new Board();
+        final Board board = new Board();
         Group root = new Group();
         Scene scene = new Scene(root, DIMENSION * SQUARE_WIDTH, 
                                     DIMENSION * SQUARE_HEIGHT);
@@ -74,11 +73,11 @@ public class BoardGUI extends Application {
             whitePieceImages.add(pv); 
         }
         
-        // netbeans suggested changing for (<type> <name> : <list>) into stream
+        // netbeans suggested changing 
+        // for (<type> <name> : <list>){} into stream
         whitePieceImages.stream().forEach((v) -> {
-            givePieceEvents(v);
+            givePieceEvents(v, board);
         });
-        
         
         for (Piece blackPiece : blackPieces) {
             target = blackPiece.getCurrentSquare(); 
@@ -93,8 +92,17 @@ public class BoardGUI extends Application {
         }
         
         blackPieceImages.stream().forEach((v) -> {
-            givePieceEvents(v);
+            givePieceEvents(v, board);
         });
+        
+        // calculate initial movement squares for white and black
+        for (Piece whitePiece : whitePieces){
+            board.calcMovementSquares(whitePiece);
+        }
+        
+        for (Piece blackPiece : blackPieces){
+            board.calcMovementSquares(blackPiece);
+        }
         
         board.setUpNewGame();
         squaresFromBoard = board.getSquares();
@@ -105,8 +113,8 @@ public class BoardGUI extends Application {
         root.getChildren().addAll(squares);
         addRankAndFileTexts(root);
         
-        for (int i = 0; i < squares.size(); i++){
-            giveSquareEventHandling(squares.get(i));
+        for (Square square : squares) {
+            giveSquareEventHandling(square);
         }
         
         root.getChildren().addAll(whitePieceImages);
@@ -160,6 +168,7 @@ public class BoardGUI extends Application {
     private void giveSquareEventHandling (Square square){        
         square.setOnMouseClicked(new EventHandler <MouseEvent>() {
             
+            @Override
             public void handle(MouseEvent event) {
                 System.out.println("clicked square | row: " + 
                         square.getRow() + "\tcolumn: " +
@@ -180,18 +189,18 @@ public class BoardGUI extends Application {
         }
     }
     
-    public void givePieceEvents(PieceImageView pv){
+    public void givePieceEvents(PieceImageView pv, Board b){
         final Delta dragDelta = new Delta();
         final Delta start = new Delta();
         
         pv.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                public void handle(MouseEvent event) {
-                    Piece piece = pv.getPiece();
+            @Override
+            public void handle(MouseEvent event) {
+                Piece piece = pv.getPiece();
                     
-                    System.out.println(piece.toString());
-                }    
-            }
-        );
+                System.out.println(piece.toString());
+            }    
+        });
         
         pv.setOnMousePressed(new EventHandler<MouseEvent>() {         
             @Override
@@ -239,12 +248,18 @@ public class BoardGUI extends Application {
 
                     if (!targetSquare.getOccupied()){
                         System.out.println("TARGET SQUARE NOT OCCUPIED");
-
-                        // make the square that the piece was occupying empty
+                        
                         Piece piece = pv.getPiece();
+                        
+                        // if the target square is within the possible moves
+                        // of the piece, move it
+                        if (piece.getPossibleMoves().contains(targetSquare)){
+                            
+                        // make the square that the piece was occupying empty                      
                         sourceSquare = piece.getCurrentSquare();
                         sourceSquare.setOccupied(false);
                         sourceSquare.setOccupyingPiece(null);
+                        
                         System.out.println("source square |\trow: " + 
                                 sourceSquare.getRow() + "\tcolumn: " +
                                 sourceSquare.getColumn() + "\toccupied: " +
@@ -264,6 +279,7 @@ public class BoardGUI extends Application {
                                 targetSquare.getRow() + "\tcolumn: " +
                                 targetSquare.getColumn() + "\toccupied: " +
                                 targetSquare.getOccupied());
+                        } 
                     }
                     else{
                         System.out.println("TARGET SQUARE OCCUPIED");
