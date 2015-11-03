@@ -532,8 +532,11 @@ public class BoardGUI extends Application {
         @Override
             public void handle(MouseEvent mouseEvent) {
                 System.out.println("setOnMousePressed");
-                start.x = pv.getLayoutX();
-                start.y = pv.getLayoutY();
+//                start.x = pv.getLayoutX();
+//                start.y = pv.getLayoutY();
+                start.x = pv.getX();
+                start.y = pv.getY();
+                System.out.println("start.x: " + start.x + " | start.y: " + start.y);
                 // record a delta distance for the drag and drop operation.
                 dragDelta.x = pv.getLayoutX() - mouseEvent.getSceneX();
                 dragDelta.y = pv.getLayoutY() - mouseEvent.getSceneY();
@@ -549,12 +552,14 @@ public class BoardGUI extends Application {
 
                 double xDrop = pv.getLayoutX() + (SQUARE_WIDTH / 2);
                 double yDrop = pv.getLayoutY() + (SQUARE_HEIGHT / 2);
+                
+                System.out.println("xDrop: " + xDrop + " | yDrop: " + yDrop);
 
                 Square target;
                 int count = 0;
 
-                while (count < squares.size() && 
-                    !squares.get(count).contains(xDrop, yDrop)){
+                while (!squares.get(count).contains(xDrop, yDrop) && 
+                        count < squares.size()){
                     count++;
                 }
 
@@ -587,9 +592,9 @@ public class BoardGUI extends Application {
         });
         
         pv.setOnMouseDragged(new EventHandler<MouseEvent>() {
-          @Override 
-          public void handle(MouseEvent mouseEvent) {
-                System.out.println("setOnMouseDragged");
+            @Override 
+            public void handle(MouseEvent mouseEvent) {
+                //System.out.println("setOnMouseDragged");
                 pv.setLayoutX(mouseEvent.getSceneX() + dragDelta.x);
                 pv.setLayoutY(mouseEvent.getSceneY() + dragDelta.y);
 
