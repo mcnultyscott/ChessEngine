@@ -283,36 +283,36 @@ public class Board {
         
         switch (piece.getPieceType()){
             case PAWN: 
-                calcPawnMoves(piece, moves);
+                calcPawnMoves((Pawn) piece, moves);
                 break;
             
             case KNIGHT:
-                calcKnightMoves(piece, moves);
+                calcKnightMoves((Knight) piece, moves);
                 break;
                 
             case BISHOP:
-                calcBishopMoves(piece, moves);
+                calcBishopMoves((Bishop) piece, moves);
                 break;
                 
             case ROOK:
-                calcRookMoves(piece, moves);
+                calcRookMoves((Rook) piece, moves);
                 break;
                 
             case QUEEN:
-                calcQueenMoves(piece, moves);
+                calcQueenMoves((Queen) piece, moves);
                 break;
                 
             case KING:
-                calcKingMoves(piece, moves);
+                calcKingMoves((King) piece, moves);
                 break;
         }
     }
     
-    private void calcPawnMoves(Piece piece, ArrayList<Square> moves){
-        target = piece.getCurrentSquare();
+    private void calcPawnMoves(Pawn pawn, ArrayList<Square> moves){
+        target = pawn.getCurrentSquare();
+
         int row = target.getRow();
         int column = target.getColumn();
-        Pawn pawn = (Pawn) piece;
         
         if (pawn.getColor().equals(WHITE)){
             switch(row){
@@ -347,13 +347,13 @@ public class Board {
         pawn.setPossibleMoves(moves);
     }
     
-    private void calcKnightMoves(Piece piece, ArrayList<Square> moves){
-        target = piece.getCurrentSquare();
+    private void calcKnightMoves(Knight knight, ArrayList<Square> moves){
+        target = knight.getCurrentSquare();
         
     }
     
-    private void calcBishopMoves(Piece piece, ArrayList<Square> moves){
-        target = piece.getCurrentSquare();
+    private void calcBishopMoves(Bishop bishop, ArrayList<Square> moves){
+        target = bishop.getCurrentSquare();
         
         // Add all possible squares left up diagonal from piece
         moves.addAll(collectPossibleMovesLeftUpDiagOfSquare(target, moves));
@@ -368,11 +368,11 @@ public class Board {
         moves.addAll(collectPossibleMovesRightDownDiagFromSquare(target, moves));
         
         // Give possible moves to piece
-        piece.setPossibleMoves(moves);
+        bishop.setPossibleMoves(moves);
     }
     
-    private void calcRookMoves(Piece piece, ArrayList<Square> moves){
-        target = piece.getCurrentSquare();
+    private void calcRookMoves(Rook rook, ArrayList<Square> moves){
+        target = rook.getCurrentSquare();
         
         // Add all possible squares to left of piece
         moves.addAll(collectPossibleMovesLeftOfSquare(target, moves));
@@ -387,11 +387,11 @@ public class Board {
         moves.addAll(collectPossibleMovesDownwardFromSquare(target, moves));
         
         // Give possible moves to piece
-        piece.setPossibleMoves(moves);
+        rook.setPossibleMoves(moves);
     }
     
-    private void calcQueenMoves(Piece piece, ArrayList<Square> moves){
-        target = piece.getCurrentSquare();
+    private void calcQueenMoves(Queen queen, ArrayList<Square> moves){
+        target = queen.getCurrentSquare();
         
         // Add all possible squares to left of piece
         moves.addAll(collectPossibleMovesLeftOfSquare(target, moves));
@@ -418,7 +418,7 @@ public class Board {
         moves.addAll(collectPossibleMovesRightDownDiagFromSquare(target, moves));
         
         // Give possible moves to piece
-        piece.setPossibleMoves(moves);
+        queen.setPossibleMoves(moves);
     }
     
     private void calcKingMoves(Piece piece, ArrayList<Square> moves){
