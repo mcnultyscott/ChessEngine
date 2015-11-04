@@ -6,22 +6,14 @@
 package chessengine;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -39,16 +31,21 @@ public class BoardGUI extends Application {
     final int PIECE_HEIGHT = 70;
     final double STROKE_WIDTH = 50;
     final Font COORDINATE_SIZE = new Font(20);
+    
     String[] fileLex = {"A", "B", "C", "D", "E", "F", "G", "H"};
     String[] rankLex = {"1", "2", "3", "4", "5", "6", "7", "8"};
+    
     ArrayList<Square> squares;
     ArrayList<Piece> whitePieces;
     ArrayList<Piece> blackPieces;
     ArrayList<PieceImageView> whitePieceImages = new ArrayList<PieceImageView>();
     ArrayList<PieceImageView> blackPieceImages = new ArrayList<PieceImageView>();;
+    
     Square[][] squaresFromBoard;
     Square target;
-    String DIVIDOR = "--------------------------";
+    
+    HashMap<Piece, Square> piecesToSquaresMap;
+    HashMap<Square, Piece> squaresToPiecesMap;
     
     @Override
     public void start(Stage primaryStage) {   
@@ -57,42 +54,22 @@ public class BoardGUI extends Application {
         Scene scene = new Scene(root, DIMENSION * SQUARE_WIDTH, 
                                     DIMENSION * SQUARE_HEIGHT);
         
+        piecesToSquaresMap = board.getPiecesToSquaresMap();
+        squaresToPiecesMap = board.getSquaresToPiecesMap();
+        
         whitePieces = board.getWhitePieces();
         blackPieces = board.getBlackPieces();
         
-        PieceImageView pv;        
-        for (Piece whitePiece : whitePieces) {
-            target = whitePiece.getCurrentSquare(); 
-            pv = new PieceImageView(whitePiece, PIECE_HEIGHT, PIECE_WIDTH, 
-                target.getColumn() * SQUARE_WIDTH + SQUARE_WIDTH / 5, 
-                target.getRow() * SQUARE_HEIGHT + SQUARE_WIDTH / 10);
-            
-            System.out.println(whitePiece.toString() + "\t| row: " +
-                    target.getRow() + "\t| column: " +
-                    target.getColumn());
-            whitePieceImages.add(pv); 
-        }
+        // place images for white an black pieces on board
+        placePieceImages(whitePieces, whitePieceImages, piecesToSquaresMap);
+        placePieceImages(blackPieces, blackPieceImages, piecesToSquaresMap);
         
-        // netbeans suggested changing 
-        // for (<type> <name> : <list>){} into stream
         whitePieceImages.stream().forEach((v) -> {
-            givePieceEvents(v, board);
+            givePieceEvents(v);
         });
         
-        for (Piece blackPiece : blackPieces) {
-            target = blackPiece.getCurrentSquare(); 
-            pv = new PieceImageView(blackPiece, PIECE_HEIGHT, PIECE_WIDTH, 
-                target.getColumn() * SQUARE_WIDTH + SQUARE_WIDTH / 5, 
-                target.getRow()* SQUARE_HEIGHT + SQUARE_WIDTH / 10);
-            
-            System.out.println(blackPiece.toString() + "\t| row: " +
-                    target.getRow() + "\t| column: " +
-                    target.getColumn());
-            blackPieceImages.add(pv); 
-        }
-        
         blackPieceImages.stream().forEach((v) -> {
-            givePieceEvents(v, board);
+            givePieceEvents(v);
         });
         
         // calculate initial movement squares for white and black
@@ -102,9 +79,8 @@ public class BoardGUI extends Application {
         
         for (Piece blackPiece : blackPieces){
             board.calcMovementSquares(blackPiece);
-        }
+        }    
         
-        board.setUpNewGame();
         squaresFromBoard = board.getSquares();
         squares = new ArrayList<Square>();
         convertFrom2DArrayToArrayList(squares, squaresFromBoard);
@@ -123,10 +99,29 @@ public class BoardGUI extends Application {
         primaryStage.show();
     }
     
+    private void placePieceImages(ArrayList<Piece> pieces,
+            ArrayList<PieceImageView> pieceImages,
+            HashMap<Piece, Square> map){
+        
+        PieceImageView pv;        
+        for (Piece p : pieces) {
+            target = map.get(p);
+            pv = new PieceImageView(p, PIECE_HEIGHT, PIECE_WIDTH, 
+                target.getColumn() * SQUARE_WIDTH + SQUARE_WIDTH / 5, 
+                target.getRow() * SQUARE_HEIGHT + SQUARE_WIDTH / 10);
+            
+            System.out.println(p.toString() + "\t| row: " +
+                    target.getRow() + "\t| column: " +
+                    target.getColumn());
+            pieceImages.add(pv); 
+        }
+    }
+    
     private void addRankAndFileTexts(Group root){
+        Text text;
         for (int i = 0; i < DIMENSION; ++i){
             for (int j = DIMENSION-1; j >= 0; --j){
-                Text text = new Text (
+                text = new Text (
                         ((i * SQUARE_WIDTH)),
                         ((Math.abs(j-(DIMENSION-1)) * SQUARE_HEIGHT) + SQUARE_HEIGHT),
                         (fileLex[i] + rankLex[j]));
@@ -141,7 +136,7 @@ public class BoardGUI extends Application {
         for (int i = 0; i < DIMENSION; ++i){
             for (int j = 0; j < DIMENSION; ++j){
                 
-                // Acts as a normal 2D array access
+                // Acts as a normal '2D' array access
                 target = squares.get((i * DIMENSION) + j);
                 
                 // Sets color
@@ -170,16 +165,15 @@ public class BoardGUI extends Application {
             
             @Override
             public void handle(MouseEvent event) {
-                System.out.println("clicked square | row: " + 
-                        square.getRow() + "\tcolumn: " +
-                        square.getColumn() + "\toccupied: " +
+                System.out.println("clicked square\t| row: " + 
+                        square.getRow() + "\t| column: " +
+                        square.getColumn() + "\t| occupied: " +
                         square.getOccupied());       
             }
         });
     }
     
-    // Converts the 2D array of squares into an array list. Annoying result
-    // of using two different data structures without thinking about it
+    // Converts the 2D array of squares into an array list.
     private void convertFrom2DArrayToArrayList(ArrayList<Square> squares,
                                                 Square[][] s){
         for (int i = 0; i < DIMENSION; i++){
@@ -189,7 +183,7 @@ public class BoardGUI extends Application {
         }
     }
     
-    public void givePieceEvents(PieceImageView pv, Board b){
+    private void givePieceEvents(PieceImageView pv){
         final Delta dragDelta = new Delta();
         final Delta start = new Delta();
         
@@ -198,7 +192,10 @@ public class BoardGUI extends Application {
             public void handle(MouseEvent event) {
                 Piece piece = pv.getPiece();
                     
-                System.out.println(piece.toString());
+                System.out.println(piece.toString() +
+                        "\t| row: " + piecesToSquaresMap.get(piece).getRow() +
+                        "\t| column: " + piecesToSquaresMap.get(piece).getColumn());
+                
             }    
         });
         
@@ -207,7 +204,14 @@ public class BoardGUI extends Application {
             public void handle(MouseEvent mouseEvent) {
                 start.x = pv.getLayoutX();
                 start.y = pv.getLayoutY();
-                System.out.println("start x: " + start.x + " | start y: " + start.y);
+                System.out.println("start x: " + start.x + "\t| start y: " + start.y);
+                
+                Piece piece = pv.getPiece();
+                for (Square s : piece.getPossibleMoves()){
+                    System.out.println("possible square\t| row: " +
+                            s.getRow() + "\t| column: " +
+                            s.getColumn());
+                }
                 
                 // record a delta distance for the drag and drop operation.
                 dragDelta.x = pv.getLayoutX() - mouseEvent.getSceneX();
@@ -246,29 +250,27 @@ public class BoardGUI extends Application {
                 
                     targetSquare = squares.get(count);
 
-                    if (!targetSquare.getOccupied()){
+                    // square in map maps to no piece
+                    if (squaresToPiecesMap.get(targetSquare) == null){
                         System.out.println("TARGET SQUARE NOT OCCUPIED");
                         
                         Piece piece = pv.getPiece();
-                        
-                        for (Square s : piece.getPossibleMoves()){
-                            System.out.println("square |\trow: " +
-                                    s.getRow() + "\tcolumn: " +
-                                    s.getColumn());
-                        }
                         
                         // if the target square is within the possible moves
                         // of the piece, move it
                         if (piece.getPossibleMoves().contains(targetSquare)){
                             
-                        // make the square that the piece was occupying empty                      
-                        sourceSquare = piece.getCurrentSquare();
-                        sourceSquare.setOccupied(false);
-                        sourceSquare.setOccupyingPiece(null);
+                        // make the square that the piece was occupying empty
+                        sourceSquare = piecesToSquaresMap.get(piece);
+                        squaresToPiecesMap.replace(sourceSquare, null);
                         
-                        System.out.println("source square |\trow: " + 
-                                sourceSquare.getRow() + "\tcolumn: " +
-                                sourceSquare.getColumn() + "\toccupied: " +
+//                        sourceSquare = piece.getCurrentSquare();
+//                        sourceSquare.setOccupied(false);
+//                        sourceSquare.setOccupyingPiece(null);
+                        
+                        System.out.println("source square\t| row: " + 
+                                sourceSquare.getRow() + "\t| column: " +
+                                sourceSquare.getColumn() + "\t| occupied: " +
                                 sourceSquare.getOccupied());
                         
                         // move image of piece to target sqaure
@@ -276,14 +278,19 @@ public class BoardGUI extends Application {
                         pv.setLayoutY(targetSquare.getY() + (SQUARE_HEIGHT / 10));
                         
                         // make the sqaure that the piece moves to occupied
-                        targetSquare.setOccupied(true);
-                        targetSquare.setOccupyingPiece(piece);
+                        squaresToPiecesMap.replace(targetSquare, piece);
+                        
+                        //targetSquare.setOccupied(true);
+                        //targetSquare.setOccupyingPiece(piece);
                         
                         // set piece's current square
-                        piece.setCurrentSquare(targetSquare);
-                        System.out.println("target square |\trow: " + 
-                                targetSquare.getRow() + "\tcolumn: " +
-                                targetSquare.getColumn() + "\toccupied: " +
+                        piecesToSquaresMap.replace(piece, targetSquare);
+                        
+                        //piece.setCurrentSquare(targetSquare);
+                        
+                        System.out.println("target square\t| row: " + 
+                                targetSquare.getRow() + "\t| column: " +
+                                targetSquare.getColumn() + "\t| occupied: " +
                                 targetSquare.getOccupied());
                         } 
                         else{
@@ -302,6 +309,8 @@ public class BoardGUI extends Application {
                     }
                 }
             }
+            
+            
         });
         
         pv.setOnMouseDragged(new EventHandler<MouseEvent>() {
