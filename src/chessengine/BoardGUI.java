@@ -65,11 +65,11 @@ public class BoardGUI extends Application {
         placePieceImages(blackPieces, blackPieceImages, piecesToSquaresMap);
         
         whitePieceImages.stream().forEach((v) -> {
-            givePieceEvents(v);
+            givePieceEvents(v, board);
         });
         
         blackPieceImages.stream().forEach((v) -> {
-            givePieceEvents(v);
+            givePieceEvents(v, board);
         });
         
         // calculate initial movement squares for white and black
@@ -183,7 +183,7 @@ public class BoardGUI extends Application {
         }
     }
     
-    private void givePieceEvents(PieceImageView pv){
+    private void givePieceEvents(PieceImageView pv, Board b){
         final Delta dragDelta = new Delta();
         final Delta start = new Delta();
         
@@ -308,9 +308,16 @@ public class BoardGUI extends Application {
                         pv.setLayoutY(start.y);
                     }
                 }
+                
+                // calculate initial movement squares for white and black
+                for (Piece whitePiece : whitePieces){
+                    b.calcMovementSquares(whitePiece);
+                }
+
+                for (Piece blackPiece : blackPieces){
+                    b.calcMovementSquares(blackPiece);
+                }
             }
-            
-            
         });
         
         pv.setOnMouseDragged(new EventHandler<MouseEvent>() {
