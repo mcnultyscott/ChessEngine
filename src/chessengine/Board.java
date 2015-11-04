@@ -310,25 +310,10 @@ public class Board {
     
     private void calcPawnMoves(Pawn pawn, ArrayList<Square> moves){
         target = pawn.getCurrentSquare();
-
         int row = target.getRow();
         int column = target.getColumn();
         
         if (pawn.getColor().equals(WHITE)){
-            switch(row){
-                case 1:
-                    moves.add(squares[row+1][column]);
-                    moves.add(squares[row+2][column]);
-                    pawn.setEnPassantable(true);
-                    break;
-                case 7:
-                    break;
-                default:
-                    moves.add(squares[row+1][column]);
-                    break;
-            }
-        }
-        else{
             switch(row){
                 case 6:
                     moves.add(squares[row-1][column]);
@@ -342,6 +327,20 @@ public class Board {
                     break;
             }
         }
+        else{
+            switch(row){
+                case 1:
+                    moves.add(squares[row+1][column]);
+                    moves.add(squares[row+2][column]);
+                    pawn.setEnPassantable(true);
+                    break;
+                case 7:
+                    break;
+                default:
+                    moves.add(squares[row+1][column]);
+                    break;
+            }
+        }
         
         // Give possibe moves to piece
         pawn.setPossibleMoves(moves);
@@ -349,7 +348,46 @@ public class Board {
     
     private void calcKnightMoves(Knight knight, ArrayList<Square> moves){
         target = knight.getCurrentSquare();
+        int row = target.getRow();
+        int column = target.getColumn();
         
+        if ((row - 2) > 0){
+            if ((column - 1) > 0){
+                moves.add(squares[row-2][column-1]);
+            }
+            if ((column + 1) < DIMENSION){
+                moves.add(squares[row-2][column+1]);
+            }
+        }
+        
+        if ((row + 2) < DIMENSION){
+            if ((column - 1) > 0){
+                moves.add(squares[row+2][column-1]);
+            }
+            if ((column + 1) < DIMENSION){
+                moves.add(squares[row+2][column+1]);
+            }
+        }
+        
+        if ((column - 2) > 0){
+            if ((row - 1) > 0){
+                moves.add(squares[row-1][column-2]);
+            }
+            if ((row + 1) < DIMENSION){
+                moves.add(squares[row+1][column-2]);
+            }
+        }
+        
+        if ((column + 2) < DIMENSION){
+            if ((row - 1) > 0){
+                moves.add(squares[row-1][column+2]);
+            }
+            if ((row + 1) < DIMENSION){
+                moves.add(squares[row+1][column+2]);
+            }
+        }
+        
+        knight.setPossibleMoves(moves);
     }
     
     private void calcBishopMoves(Bishop bishop, ArrayList<Square> moves){
