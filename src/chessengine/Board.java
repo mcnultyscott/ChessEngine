@@ -23,7 +23,8 @@ public class Board {
     // maps keeping track of where pieces are.
     private HashMap<Piece, Square> mapWhitePiecesToSquares = new HashMap<Piece, Square>();
     private HashMap<Piece, Square> mapBlackPiecesToSquares = new HashMap<Piece, Square>();
-    private HashMap<Square, Piece> mapSquaresToPieces = new HashMap<Square, Piece>(64);
+    private HashMap<Piece, Square> piecesToSquaresMap = new HashMap<Piece, Square>();
+    private HashMap<Square, Piece> squaresToPiecesMap = new HashMap<Square, Piece>(64);
     // to check if a square is occupied, just check if a piece is mapped to it.
     
     // Paths to png files
@@ -107,7 +108,7 @@ public class Board {
                 // add square to map. initially maps to nothing.
                 // may not need this since mapping of squares to pieces
                 // can be done when setting up pieces.
-                //mapSquaresToPieces.put(squares[i][j], null);
+                squaresToPiecesMap.put(squares[i][j], null);
             }
         }
     }
@@ -143,11 +144,11 @@ public class Board {
     // Put pawns on starting squares
     private void setPawnsOnSquares(){
         for (int i = 0; i < 8; i++){
-            mapWhitePiecesToSquares.put(whitePieces.get(i), squares[6][i]);
-            mapSquaresToPieces.put(squares[6][i], whitePieces.get(i));
+            piecesToSquaresMap.put(whitePieces.get(i), squares[6][i]);
+            squaresToPiecesMap.put(squares[6][i], whitePieces.get(i));
             
-            mapBlackPiecesToSquares.put(blackPieces.get(i), squares[1][i]);
-            mapSquaresToPieces.put(squares[1][i], blackPieces.get(i));
+            piecesToSquaresMap.put(blackPieces.get(i), squares[1][i]);
+            squaresToPiecesMap.put(squares[1][i], blackPieces.get(i));
 
             // White pawns on second rank
             squares[6][i].setOccupied(true);
@@ -172,15 +173,15 @@ public class Board {
     
     // Put knights on starting squares
     private void setKnightsOnSquares(){
-        mapWhitePiecesToSquares.put(whitePieces.get(8), squares[7][1]);
-        mapWhitePiecesToSquares.put(whitePieces.get(9), squares[7][6]);
-        mapSquaresToPieces.put(squares[7][1], whitePieces.get(8));
-        mapSquaresToPieces.put(squares[7][6], whitePieces.get(9));
+        piecesToSquaresMap.put(whitePieces.get(8), squares[7][1]);
+        piecesToSquaresMap.put(whitePieces.get(9), squares[7][6]);
+        squaresToPiecesMap.put(squares[7][1], whitePieces.get(8));
+        squaresToPiecesMap.put(squares[7][6], whitePieces.get(9));
 
-        mapBlackPiecesToSquares.put(blackPieces.get(8), squares[0][1]);
-        mapBlackPiecesToSquares.put(blackPieces.get(9), squares[0][6]);
-        mapSquaresToPieces.put(squares[0][1], blackPieces.get(8));
-        mapSquaresToPieces.put(squares[0][6], blackPieces.get(9));
+        piecesToSquaresMap.put(blackPieces.get(8), squares[0][1]);
+        piecesToSquaresMap.put(blackPieces.get(9), squares[0][6]);
+        squaresToPiecesMap.put(squares[0][1], blackPieces.get(8));
+        squaresToPiecesMap.put(squares[0][6], blackPieces.get(9));
         
         squares[7][1].setOccupied(true);
         squares[7][1].setOccupyingPiece(whitePieces.get(8)); 
@@ -208,15 +209,15 @@ public class Board {
     
     // Putbishops on starting squares
     private void setBishopsOnSquares(){   
-        mapWhitePiecesToSquares.put(whitePieces.get(10), squares[7][2]);
-        mapWhitePiecesToSquares.put(whitePieces.get(11), squares[7][5]);
-        mapSquaresToPieces.put(squares[7][2], whitePieces.get(10));
-        mapSquaresToPieces.put(squares[7][5], whitePieces.get(11));
+        piecesToSquaresMap.put(whitePieces.get(10), squares[7][2]);
+        piecesToSquaresMap.put(whitePieces.get(11), squares[7][5]);
+        squaresToPiecesMap.put(squares[7][2], whitePieces.get(10));
+        squaresToPiecesMap.put(squares[7][5], whitePieces.get(11));
 
-        mapBlackPiecesToSquares.put(blackPieces.get(10), squares[0][2]);
-        mapBlackPiecesToSquares.put(blackPieces.get(11), squares[0][5]);
-        mapSquaresToPieces.put(squares[0][2], blackPieces.get(10));
-        mapSquaresToPieces.put(squares[0][5], blackPieces.get(11));
+        piecesToSquaresMap.put(blackPieces.get(10), squares[0][2]);
+        piecesToSquaresMap.put(blackPieces.get(11), squares[0][5]);
+        squaresToPiecesMap.put(squares[0][2], blackPieces.get(10));
+        squaresToPiecesMap.put(squares[0][5], blackPieces.get(11));
         
         squares[7][2].setOccupied(true);
         squares[7][2].setOccupyingPiece(whitePieces.get(10));
@@ -244,15 +245,15 @@ public class Board {
     
     // Put rooks on starting squares
     private void setRooksOnSquares(){
-        mapWhitePiecesToSquares.put(whitePieces.get(12), squares[7][0]);
-        mapWhitePiecesToSquares.put(whitePieces.get(13), squares[7][0]);
-        mapSquaresToPieces.put(squares[7][0], whitePieces.get(12));
-        mapSquaresToPieces.put(squares[7][0], whitePieces.get(13));
+        piecesToSquaresMap.put(whitePieces.get(12), squares[7][0]);
+        piecesToSquaresMap.put(whitePieces.get(13), squares[7][7]);
+        squaresToPiecesMap.put(squares[7][0], whitePieces.get(12));
+        squaresToPiecesMap.put(squares[7][7], whitePieces.get(13));
 
-        mapBlackPiecesToSquares.put(blackPieces.get(12), squares[0][0]);
-        mapBlackPiecesToSquares.put(blackPieces.get(13), squares[0][0]);
-        mapSquaresToPieces.put(squares[0][0], blackPieces.get(12));
-        mapSquaresToPieces.put(squares[0][0], blackPieces.get(13));
+        piecesToSquaresMap.put(blackPieces.get(12), squares[0][0]);
+        piecesToSquaresMap.put(blackPieces.get(13), squares[0][7]);
+        squaresToPiecesMap.put(squares[0][0], blackPieces.get(12));
+        squaresToPiecesMap.put(squares[0][7], blackPieces.get(13));
         
         squares[7][0].setOccupied(true);
         squares[7][0].setOccupyingPiece(whitePieces.get(12)); 
@@ -277,11 +278,11 @@ public class Board {
     
     // Put queesn on starting squares
     private void setQueensOnSquares(){
-        mapWhitePiecesToSquares.put(whitePieces.get(14), squares[7][3]);
-        mapSquaresToPieces.put(squares[7][3], whitePieces.get(14));
+        piecesToSquaresMap.put(whitePieces.get(14), squares[7][3]);
+        squaresToPiecesMap.put(squares[7][3], whitePieces.get(14));
 
-        mapBlackPiecesToSquares.put(blackPieces.get(14), squares[0][3]);
-        mapSquaresToPieces.put(squares[0][3], blackPieces.get(14));
+        piecesToSquaresMap.put(blackPieces.get(14), squares[0][3]);
+        squaresToPiecesMap.put(squares[0][3], blackPieces.get(14));
         
         squares[7][3].setOccupied(true);
         squares[7][3].setOccupyingPiece(whitePieces.get(14));
@@ -300,11 +301,11 @@ public class Board {
     
     // Put Kings on starting squares
     private void setKingsOnSquares(){
-        mapWhitePiecesToSquares.put(whitePieces.get(15), squares[7][4]);
-        mapSquaresToPieces.put(squares[7][4], whitePieces.get(15));
+        piecesToSquaresMap.put(whitePieces.get(15), squares[7][4]);
+        squaresToPiecesMap.put(squares[7][4], whitePieces.get(15));
 
-        mapBlackPiecesToSquares.put(blackPieces.get(15), squares[0][4]);
-        mapSquaresToPieces.put(squares[0][4], blackPieces.get(15));
+        piecesToSquaresMap.put(blackPieces.get(15), squares[0][4]);
+        squaresToPiecesMap.put(squares[0][4], blackPieces.get(15));
         
         squares[7][4].setOccupied(true);
         squares[7][4].setOccupyingPiece(whitePieces.get(15));
@@ -321,7 +322,7 @@ public class Board {
             for (int j = 0; j < 8; ++j){
                 target = squares[i][j];
                 
-                //mapSquaresToPieces.put(target, null);
+                squaresToPiecesMap.replace(target, null);
                 
                 target.setOccupied(false);
                 target.setOccupyingPiece(null);
@@ -687,6 +688,14 @@ public class Board {
         }
         
         return moves;
+    }
+    
+    public HashMap<Piece, Square> getPiecesToSquaresMap(){
+        return piecesToSquaresMap;
+    }
+    
+    public HashMap<Square, Piece> getSquaresToPiecesMap(){
+        return squaresToPiecesMap;
     }
     
     public Square[][] getSquares(){
