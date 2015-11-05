@@ -320,14 +320,14 @@ public class Board {
 //                    directAttack.add(squares[row-1][column-1]);
 //                    directAttack.add(squares[row-1][column+1]);
                     if (column == 0){
-                        directAttack.add(squares[row+1][column+1]);
+                        directAttack.add(squares[row-1][column+1]);
                     }
                     else if (column == 7){
-                        directAttack.add(squares[row+1][column-1]);
+                        directAttack.add(squares[row-1][column-1]);
                     }
                     else{
-                        directAttack.add(squares[row+1][column-1]);
-                        directAttack.add(squares[row+1][column+1]);
+                        directAttack.add(squares[row-1][column-1]);
+                        directAttack.add(squares[row-1][column+1]);
                     }
                                     
                 case 0:
@@ -347,14 +347,14 @@ public class Board {
                     }
                     
                    if (column == 0){
-                        directAttack.add(squares[row-1][column-1]);
+                        directAttack.add(squares[row+1][column+1]);
                     }
                     else if (column == 7){
-                        directAttack.add(squares[row-1][column+1]);
+                        directAttack.add(squares[row+1][column-1]);
                     }
                     else{
-                        directAttack.add(squares[row-1][column-1]);
-                        directAttack.add(squares[row-1][column+1]);
+                        directAttack.add(squares[row+1][column-1]);
+                        directAttack.add(squares[row+1][column+1]);
                     }
                 
                 case 7:
@@ -375,11 +375,13 @@ public class Board {
         int column = target.getColumn();
         
         if ((row - 2) >= 0){
-            if ((column - 1) >= 0 && squaresToPiecesMap.get(squares[row-2][column-1]) == null){
+            if ((column - 1) >= 0 && 
+                    squaresToPiecesMap.get(squares[row-2][column-1]) == null){
                 moves.add(squares[row-2][column-1]);
             }
             else{
-                if (squaresToPiecesMap.get(squares[row-2][column-1]).getColor().equals(knight.getColor()))
+                if ((column - 1) >= 0 &&
+                        !squaresToPiecesMap.get(squares[row-2][column-1]).getColor().equals(knight.getColor()))
                     directAttack.add(squares[row-2][column-1]);
             }
             
@@ -388,7 +390,8 @@ public class Board {
                 moves.add(squares[row-2][column+1]);
             }
             else{
-                if (squaresToPiecesMap.get(squares[row-2][column+1]).getColor().equals(knight.getColor()))
+                if ((column + 1) < DIMENSION &&
+                        !squaresToPiecesMap.get(squares[row-2][column+1]).getColor().equals(knight.getColor()))
                     directAttack.add(squares[row-2][column+1]);
             }
         }
@@ -399,7 +402,8 @@ public class Board {
                 moves.add(squares[row+2][column-1]);
             }
             else{
-                if (squaresToPiecesMap.get(squares[row+2][column-1]).getColor().equals(knight.getColor()))
+                if ((column - 1) >= 0 &&
+                        !squaresToPiecesMap.get(squares[row+2][column-1]).getColor().equals(knight.getColor()))
                     directAttack.add(squares[row+2][column-1]);
             }
             
@@ -408,7 +412,8 @@ public class Board {
                 moves.add(squares[row+2][column+1]);
             }
             else{
-                if (squaresToPiecesMap.get(squares[row+2][column+1]).getColor().equals(knight.getColor()))
+                if ((column + 1) < DIMENSION &&
+                        !squaresToPiecesMap.get(squares[row+2][column+1]).getColor().equals(knight.getColor()))
                     directAttack.add(squares[row+2][column+1]);
             }
         }
@@ -419,7 +424,8 @@ public class Board {
                 moves.add(squares[row-1][column-2]);
             }
             else{
-                if (squaresToPiecesMap.get(squares[row-1][column-2]).getColor().equals(knight.getColor()))
+                if ((row - 1) >= 0 &&
+                        !squaresToPiecesMap.get(squares[row-1][column-2]).getColor().equals(knight.getColor()))
                     directAttack.add(squares[row-1][column-2]);
             }
             
@@ -428,7 +434,8 @@ public class Board {
                 moves.add(squares[row+1][column-2]);
             }
             else{
-                if (squaresToPiecesMap.get(squares[row+1][column-2]).getColor().equals(knight.getColor()))
+                if ((row + 1) < DIMENSION &&
+                        !squaresToPiecesMap.get(squares[row+1][column-2]).getColor().equals(knight.getColor()))
                     directAttack.add(squares[row+1][column-2]);
             }
         }
@@ -439,7 +446,8 @@ public class Board {
                 moves.add(squares[row-1][column+2]);
             }
             else{
-                if (squaresToPiecesMap.get(squares[row-1][column+2]).getColor().equals(knight.getColor()))
+                if ((row - 1) > 0 &&
+                        !squaresToPiecesMap.get(squares[row-1][column+2]).getColor().equals(knight.getColor()))
                     directAttack.add(squares[row-1][column+2]);
             }
             
@@ -448,7 +456,8 @@ public class Board {
                 moves.add(squares[row+1][column+2]);
             }
             else{
-                if (squaresToPiecesMap.get(squares[row+1][column+2]).getColor().equals(knight.getColor()))
+                if ((row + 1) < DIMENSION &&
+                        !squaresToPiecesMap.get(squares[row+1][column+2]).getColor().equals(knight.getColor()))
                     directAttack.add(squares[row+1][column+2]);
             }
         }
