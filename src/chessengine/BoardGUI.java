@@ -34,6 +34,8 @@ public class BoardGUI extends Application {
     final double STROKE_WIDTH = 5;
     //final Paint MOVE_HIGHLIGHT = Color.DARKCYAN;
     final Paint MOVE_HIGHLIGHT_COL = Color.DARKTURQUOISE;
+    final Paint DATT_HIGHLIGHT_COL = Color.RED;
+    final Paint INATT_HIGHLIGHT_COL = Color.YELLOW;
     final Font COORDINATE_SIZE = new Font(20);
     final String DIVIDOR = "------------------------------------------------------------------------";
     
@@ -221,15 +223,9 @@ public class BoardGUI extends Application {
                         fileLex[square.getColumn()] +
                         rankLex[Math.abs(DIMENSION - square.getRow() - 1)]);             
             
-                for (Square s : piece.getPossibleMoves()){
-                    System.out.println("possible move\t| " +
-                            fileLex[s.getColumn()] +
-                            rankLex[Math.abs(DIMENSION - s.getRow() - 1)]);
-                    
-                    s.setStrokeWidth(STROKE_WIDTH);
-                    s.setStrokeType(StrokeType.INSIDE);
-                    s.setStroke(MOVE_HIGHLIGHT_COL);
-                }
+                highlightMoveSquares(piece.getPossibleMoves());
+                highlightDirectAttackSquares(piece.getDirectAttackSquares());
+                highlightIndirectAttackSquares(piece.getDirectAttackSquares());
                 
                 // record a delta distance for the drag and drop operation.
                 dragDelta.x = pv.getLayoutX() - mouseEvent.getSceneX();
@@ -315,10 +311,9 @@ public class BoardGUI extends Application {
                     }
                 }
                 
-                // return squares to original color
-                for (Square s : piece.getPossibleMoves()){
-                    s.setStroke(null);
-                }
+                removeMoveHighlights(piece.getPossibleMoves());
+                removeIndirectAttackHighlights(piece.getIndirectAttackSquares());
+                removeDirectAttackHighlights(piece.getDirectAttackSquares());
                 
                 // calculate possible next moves for pieces
                 for (Piece whitePiece : whitePieces){
@@ -340,6 +335,60 @@ public class BoardGUI extends Application {
                 pv.setLayoutY(mouseEvent.getSceneY() + dragDelta.y);
             }
         });
+    }
+    
+    private void removeMoveHighlights(ArrayList<Square> moves){
+        for (Square s : moves){
+            s.setStroke(null);
+        }
+    }
+    
+    private void removeIndirectAttackHighlights(ArrayList<Square> indirectAttacks){
+        for (Square s : indirectAttacks){
+            s.setStroke(null);
+        }
+    }
+    
+    private void removeDirectAttackHighlights(ArrayList<Square> directAttacks){
+        for (Square s : directAttacks){
+            s.setStroke(null);
+        }
+    }
+    
+    private void highlightMoveSquares(ArrayList<Square> moves){
+        for (Square s : moves){
+            System.out.println("possible move\t| " +
+                    fileLex[s.getColumn()] +
+                    rankLex[Math.abs(DIMENSION - s.getRow() - 1)]);
+                    
+            s.setStrokeWidth(STROKE_WIDTH);
+            s.setStrokeType(StrokeType.INSIDE);
+            s.setStroke(MOVE_HIGHLIGHT_COL);        
+        }
+    }
+    
+    private void highlightIndirectAttackSquares(ArrayList<Square> indirectAttacks){
+        for (Square s : indirectAttacks){
+            System.out.println("possible attack\t| " +
+                    fileLex[s.getColumn()] +
+                    rankLex[Math.abs(DIMENSION - s.getRow() - 1)]);
+            s.setStrokeWidth(STROKE_WIDTH);
+            s.setStrokeType(StrokeType.INSIDE);
+            s.setStroke(INATT_HIGHLIGHT_COL); 
+        }
+        
+    }
+    
+    private void highlightDirectAttackSquares(ArrayList<Square> directAttacks){
+        for (Square s : directAttacks){
+            System.out.println("possible attack\t| " +
+                    fileLex[s.getColumn()] +
+                    rankLex[Math.abs(DIMENSION - s.getRow() - 1)]);
+                    
+            s.setStrokeWidth(STROKE_WIDTH);
+            s.setStrokeType(StrokeType.INSIDE);
+            s.setStroke(DATT_HIGHLIGHT_COL);        
+        }
     }
     
     /**
