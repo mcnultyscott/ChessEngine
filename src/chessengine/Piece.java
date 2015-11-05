@@ -21,6 +21,7 @@ public class Piece{
     ArrayList<Square> moveSquares = new ArrayList<>();
     ArrayList<Square> directAttackSquares = new ArrayList<>();
     ArrayList<Square> indirectAttackSquares = new ArrayList<>();
+    ArrayList<Square> defendedSquares = new ArrayList<>();
     String pathForPNG;
     
     public Piece(String col, PieceTypeEnum type){
@@ -64,6 +65,14 @@ public class Piece{
     
     public void setIndirectAttackSquares(ArrayList<Square> indirectAttack){
         indirectAttackSquares = indirectAttack;
+    }
+    
+    public ArrayList<Square> getDefendedSquares(){
+        return defendedSquares;
+    }
+    
+    public void setDefendedSquares(ArrayList<Square> defended){
+        defendedSquares = defended;
     }
     
     @Override
