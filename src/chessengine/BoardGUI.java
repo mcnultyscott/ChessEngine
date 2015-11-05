@@ -14,6 +14,8 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -29,8 +31,11 @@ public class BoardGUI extends Application {
     final int SQUARE_HEIGHT = 100;
     final int PIECE_WIDTH = 70;
     final int PIECE_HEIGHT = 70;
-    final double STROKE_WIDTH = 50;
+    final double STROKE_WIDTH = 5;
+    //final Paint MOVE_HIGHLIGHT = Color.DARKCYAN;
+    final Paint MOVE_HIGHLIGHT_COL = Color.DARKTURQUOISE;
     final Font COORDINATE_SIZE = new Font(20);
+    final String DIVIDOR = "------------------------------------------------------------------------";
     
     String[] fileLex = {"A", "B", "C", "D", "E", "F", "G", "H"};
     String[] rankLex = {"1", "2", "3", "4", "5", "6", "7", "8"};
@@ -110,9 +115,9 @@ public class BoardGUI extends Application {
                 target.getColumn() * SQUARE_WIDTH + SQUARE_WIDTH / 5, 
                 target.getRow() * SQUARE_HEIGHT + SQUARE_WIDTH / 10);
             
-            System.out.println(p.toString() + "\t| row: " +
-                    target.getRow() + "\t| column: " +
-                    target.getColumn());
+//            System.out.println(p.toString() + "\t| row: " +
+//                    target.getRow() + "\t| column: " +
+//                    target.getColumn());
             pieceImages.add(pv); 
         }
     }
@@ -167,8 +172,10 @@ public class BoardGUI extends Application {
             public void handle(MouseEvent event) {
                 System.out.println("clicked square\t| row: " + 
                         square.getRow() + "\t| column: " +
-                        square.getColumn() + "\t| occupied: " +
-                        square.getOccupied());       
+                        square.getColumn() + "\t| occupying: " +
+                        squaresToPiecesMap.get(square));
+                
+                System.out.println(DIVIDOR);
             }
         });
     }
@@ -187,17 +194,13 @@ public class BoardGUI extends Application {
         final Delta dragDelta = new Delta();
         final Delta start = new Delta();
         
-        pv.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                Piece piece = pv.getPiece();
-                    
-                System.out.println(piece.toString() +
-                        "\t| row: " + piecesToSquaresMap.get(piece).getRow() +
-                        "\t| column: " + piecesToSquaresMap.get(piece).getColumn());
-                
-            }    
-        });
+//        pv.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent event) {
+//                Piece piece = pv.getPiece();
+//                
+//            }    
+//        });
         
         pv.setOnMousePressed(new EventHandler<MouseEvent>() {         
             @Override
@@ -207,10 +210,17 @@ public class BoardGUI extends Application {
                 System.out.println("start x: " + start.x + "\t| start y: " + start.y);
                 
                 Piece piece = pv.getPiece();
+                System.out.println(piece.toString() +
+                        "\t| row: " + piecesToSquaresMap.get(piece).getRow() +
+                        "\t| column: " + piecesToSquaresMap.get(piece).getColumn());             
+            
                 for (Square s : piece.getPossibleMoves()){
-                    System.out.println("possible square\t| row: " +
+                    System.out.println("possible move\t| row: " +
                             s.getRow() + "\t| column: " +
                             s.getColumn());
+                    s.setStrokeWidth(STROKE_WIDTH);
+                    s.setStrokeType(StrokeType.INSIDE);
+                    s.setStroke(MOVE_HIGHLIGHT_COL);
                 }
                 
                 // record a delta distance for the drag and drop operation.
@@ -235,10 +245,12 @@ public class BoardGUI extends Application {
 
                 // finds the index of the square that the piece
                 // was dropped into
-                while (!squares.get(count).contains(xDrop, yDrop) && 
-                        count < squares.size()){
+                while (count < squares.size() && 
+                        !squares.get(count).contains(xDrop, yDrop)){
                     count++;
                 }
+                
+                Piece piece = pv.getPiece();
 
                 // Checks if the piece is brought off the board.
                 // If the piece is, put it back to its starting posision.
@@ -251,10 +263,7 @@ public class BoardGUI extends Application {
                     targetSquare = squares.get(count);
 
                     // square in map maps to no piece
-                    if (squaresToPiecesMap.get(targetSquare) == null){
-                        System.out.println("TARGET SQUARE NOT OCCUPIED");
-                        
-                        Piece piece = pv.getPiece();
+                    if (squaresToPiecesMap.get(targetSquare) == null){        
                         
                         // if the target square is within the possible moves
                         // of the piece, move it
@@ -263,10 +272,6 @@ public class BoardGUI extends Application {
                         // make the square that the piece was occupying empty
                         sourceSquare = piecesToSquaresMap.get(piece);
                         squaresToPiecesMap.replace(sourceSquare, null);
-                        
-//                        sourceSquare = piece.getCurrentSquare();
-//                        sourceSquare.setOccupied(false);
-//                        sourceSquare.setOccupyingPiece(null);
                         
                         System.out.println("source square\t| row: " + 
                                 sourceSquare.getRow() + "\t| column: " +
@@ -280,13 +285,8 @@ public class BoardGUI extends Application {
                         // make the sqaure that the piece moves to occupied
                         squaresToPiecesMap.replace(targetSquare, piece);
                         
-                        //targetSquare.setOccupied(true);
-                        //targetSquare.setOccupyingPiece(piece);
-                        
                         // set piece's current square
                         piecesToSquaresMap.replace(piece, targetSquare);
-                        
-                        //piece.setCurrentSquare(targetSquare);
                         
                         System.out.println("target square\t| row: " + 
                                 targetSquare.getRow() + "\t| column: " +
@@ -300,8 +300,7 @@ public class BoardGUI extends Application {
                         }
                     }
                     else{
-                        System.out.println("TARGET SQUARE OCCUPIED");
-                                     
+                        
                         // move the image of the piece back to the 
                         // starting position
                         pv.setLayoutX(start.x);
@@ -309,7 +308,12 @@ public class BoardGUI extends Application {
                     }
                 }
                 
-                // calculate initial movement squares for white and black
+                // return squares to original color
+                for (Square s : piece.getPossibleMoves()){
+                    s.setStroke(null);
+                }
+                
+                // calculate possible next moves for pieces
                 for (Piece whitePiece : whitePieces){
                     b.calcMovementSquares(whitePiece);
                 }
@@ -317,6 +321,8 @@ public class BoardGUI extends Application {
                 for (Piece blackPiece : blackPieces){
                     b.calcMovementSquares(blackPiece);
                 }
+                
+                System.out.println(DIVIDOR);
             }
         });
         
