@@ -101,8 +101,6 @@ public class Board {
                         SQUARE_WIDTH,
                         SQUARE_HEIGHT);
                 
-                squares[i][j].setOccupied(false);
-                
                 // add square to map. initially maps to nothing.
                 // may not need this since mapping of squares to pieces
                 // can be done when setting up pieces.
@@ -262,43 +260,46 @@ public class Board {
 //        piece.getCurrentSquare().setOccupied(false);
 //        piece.getCurrentSquare().setOccupyingPiece(null);
 //        piece.setCurrentSquare(toSquare);
-        toSquare.setOccupyingPiece(piece);
+//        toSquare.setOccupyingPiece(piece);
     }
     
     // Given a piece the possible squares the piece can
     // move to will be calculated.
     public void calcMovementSquares (Piece piece){
         ArrayList<Square> moves = new ArrayList<>();
+        ArrayList<Square> directAttack = new ArrayList<>();
+        ArrayList<Square> indirectAttack = new ArrayList<>();
         
         switch (piece.getPieceType()){
             case PAWN: 
-                calcPawnMoves((Pawn) piece, moves);
+                calcPawnMoves((Pawn) piece, moves, directAttack, indirectAttack);
                 break;
             
             case KNIGHT:
-                calcKnightMoves((Knight) piece, moves);
+                calcKnightMoves((Knight) piece, moves, directAttack, indirectAttack);
                 break;
                 
             case BISHOP:
-                calcBishopMoves((Bishop) piece, moves);
+                calcBishopMoves((Bishop) piece, moves, directAttack, indirectAttack);
                 break;
                 
             case ROOK:
-                calcRookMoves((Rook) piece, moves);
+                calcRookMoves((Rook) piece, moves, directAttack, indirectAttack);
                 break;
                 
             case QUEEN:
-                calcQueenMoves((Queen) piece, moves);
+                calcQueenMoves((Queen) piece, moves, directAttack, indirectAttack);
                 break;
                 
             case KING:
-                calcKingMoves((King) piece, moves);
+                calcKingMoves((King) piece, moves, directAttack, indirectAttack);
                 break;
         }
     }
     
     
-    private void calcPawnMoves(Pawn pawn, ArrayList<Square> moves){
+    private void calcPawnMoves(Pawn pawn, ArrayList<Square> moves, 
+            ArrayList<Square> directAttack, ArrayList<Square> indirectAttack){
         target = piecesToSquaresMap.get(pawn);
         int row = target.getRow();
         int column = target.getColumn();
@@ -314,7 +315,9 @@ public class Board {
                             pawn.setEnPassantable(true);
                         }  
                     }
-                
+                    
+                    directAttack.add(squares[row-1][column-1]);
+                    directAttack.add(squares[row-1][column+1]);
                 case 0:
                     break;
             }
@@ -331,6 +334,8 @@ public class Board {
                         }
                     }
                     
+                    directAttack.add(squares[row+1][column-1]);
+                    directAttack.add(squares[row+1][column+1]);
                 case 7:
                     break;
             }
@@ -338,22 +343,32 @@ public class Board {
         
         // Give possibe moves to piece
         pawn.setPossibleMoves(moves);
+        pawn.setDirectAttackSquares(directAttack);
     }
     
     // TODO: Try to think of a better way to go about this.
-    private void calcKnightMoves(Knight knight, ArrayList<Square> moves){
+    private void calcKnightMoves(Knight knight, ArrayList<Square> moves, 
+            ArrayList<Square> directAttack, ArrayList<Square> indirectAttack){
         target = piecesToSquaresMap.get(knight);
         int row = target.getRow();
         int column = target.getColumn();
         
         if ((row - 2) >= 0){
-            if ((column - 1) >= 0 && 
-                    squaresToPiecesMap.get(squares[row-2][column-1]) == null){
+            if ((column - 1) >= 0 && squaresToPiecesMap.get(squares[row-2][column-1]) == null){
                 moves.add(squares[row-2][column-1]);
             }
+            else{
+                if (squaresToPiecesMap.get(squares[row-2][column-1]).getColor().equals(knight.getColor()))
+                    directAttack.add(squares[row-2][column-1]);
+            }
+            
             if ((column + 1) < DIMENSION && 
                     squaresToPiecesMap.get(squares[row-2][column+1]) == null){
                 moves.add(squares[row-2][column+1]);
+            }
+            else{
+                if (squaresToPiecesMap.get(squares[row-2][column+1]).getColor().equals(knight.getColor()))
+                    directAttack.add(squares[row-2][column+1]);
             }
         }
         
@@ -362,9 +377,18 @@ public class Board {
                     squaresToPiecesMap.get(squares[row+2][column-1]) == null){
                 moves.add(squares[row+2][column-1]);
             }
+            else{
+                if (squaresToPiecesMap.get(squares[row+2][column-1]).getColor().equals(knight.getColor()))
+                    directAttack.add(squares[row+2][column-1]);
+            }
+            
             if ((column + 1) < DIMENSION && 
                     squaresToPiecesMap.get(squares[row+2][column+1]) == null){
                 moves.add(squares[row+2][column+1]);
+            }
+            else{
+                if (squaresToPiecesMap.get(squares[row+2][column+1]).getColor().equals(knight.getColor()))
+                    directAttack.add(squares[row+2][column+1]);
             }
         }
         
@@ -373,9 +397,18 @@ public class Board {
                     squaresToPiecesMap.get(squares[row-1][column-2]) == null){
                 moves.add(squares[row-1][column-2]);
             }
+            else{
+                if (squaresToPiecesMap.get(squares[row-1][column-2]).getColor().equals(knight.getColor()))
+                    directAttack.add(squares[row-1][column-2]);
+            }
+            
             if ((row + 1) < DIMENSION && 
                     squaresToPiecesMap.get(squares[row+1][column-2]) == null){
                 moves.add(squares[row+1][column-2]);
+            }
+            else{
+                if (squaresToPiecesMap.get(squares[row+1][column-2]).getColor().equals(knight.getColor()))
+                    directAttack.add(squares[row+1][column-2]);
             }
         }
         
@@ -384,247 +417,347 @@ public class Board {
                     squaresToPiecesMap.get(squares[row-1][column+2]) == null){
                 moves.add(squares[row-1][column+2]);
             }
+            else{
+                if (squaresToPiecesMap.get(squares[row-1][column+2]).getColor().equals(knight.getColor()))
+                    directAttack.add(squares[row-1][column+2]);
+            }
+            
             if ((row + 1) < DIMENSION && 
                     squaresToPiecesMap.get(squares[row+1][column+2]) == null){
                 moves.add(squares[row+1][column+2]);
             }
+            else{
+                if (squaresToPiecesMap.get(squares[row+1][column+2]).getColor().equals(knight.getColor()))
+                    directAttack.add(squares[row+1][column+2]);
+            }
         }
         
         knight.setPossibleMoves(moves);
+        knight.setDirectAttackSquares(directAttack);
     }
     
-    private void calcBishopMoves(Bishop bishop, ArrayList<Square> moves){
+    private void calcBishopMoves(Bishop bishop, ArrayList<Square> moves, 
+            ArrayList<Square> directAttack, ArrayList<Square> indirectAttack){
         target = piecesToSquaresMap.get(bishop);
         
         // Add all possible squares left up diagonal from piece
-        moves.addAll(collectPossibleMovesLeftUpDiagOfSquare(target, moves));
+        collectPossibleMovesLeftUpDiagOfSquare(target, moves, directAttack, indirectAttack);
         
         // Add all possible squares right up diagonal from piece
-        moves.addAll(collectPossibleMovesRightUpDiagOfSquare(target, moves));
+        collectPossibleMovesRightUpDiagOfSquare(target, moves, directAttack, indirectAttack);
         
         // Add all possible squares left down diagonal from piece
-        moves.addAll(collectPossibleMovesLeftDownDiagFromSquare(target, moves));
+        collectPossibleMovesLeftDownDiagFromSquare(target, moves, directAttack, indirectAttack);
         
         // Add all possible squares right down diagonal from piece
-        moves.addAll(collectPossibleMovesRightDownDiagFromSquare(target, moves));
-        
+        collectPossibleMovesRightDownDiagFromSquare(target, moves, directAttack, indirectAttack);
+       
         // Give possible moves to piece
         bishop.setPossibleMoves(moves);
+        bishop.setDirectAttackSquares(directAttack);
+        bishop.setIndirectAttackSquares(indirectAttack);
     }
     
-    private void calcRookMoves(Rook rook, ArrayList<Square> moves){
+    private void calcRookMoves(Rook rook, ArrayList<Square> moves, 
+            ArrayList<Square> directAttack, ArrayList<Square> indirectAttack){
         target = piecesToSquaresMap.get(rook);
         
         // Add all possible squares to left of piece
-        moves.addAll(collectPossibleMovesLeftOfSquare(target, moves));
+        collectPossibleMovesLeftOfSquare(target, moves, directAttack, indirectAttack);
         
         // Add all possible squares to right of piece
-        moves.addAll(collectPossibleMovesRightOfSquare(target, moves));
+        collectPossibleMovesRightOfSquare(target, moves, directAttack, indirectAttack);
         
         // Add all possible squares upward from piece
-        moves.addAll(collectPossibleMovesUpwardFromSquare(target, moves));
+        collectPossibleMovesUpwardFromSquare(target, moves, directAttack, indirectAttack);
         
         // Add all possible squares downward from piece
-        moves.addAll(collectPossibleMovesDownwardFromSquare(target, moves));
+        collectPossibleMovesDownwardFromSquare(target, moves, directAttack, indirectAttack);
         
-        // Give possible moves to piece
+        // Give moves to piece
         rook.setPossibleMoves(moves);
+        rook.setDirectAttackSquares(directAttack);
+        rook.setIndirectAttackSquares(indirectAttack);
     }
     
-    private void calcQueenMoves(Queen queen, ArrayList<Square> moves){
+    private void calcQueenMoves(Queen queen, ArrayList<Square> moves, 
+            ArrayList<Square> directAttack, ArrayList<Square> indirectAttack){
         target = piecesToSquaresMap.get(queen);
         
         // Add all possible squares to left of piece
-        moves.addAll(collectPossibleMovesLeftOfSquare(target, moves));
+        collectPossibleMovesLeftOfSquare(target, moves, directAttack, indirectAttack);
         
         // Add all possible squares to right of piece
-        moves.addAll(collectPossibleMovesRightOfSquare(target, moves));
+        collectPossibleMovesRightOfSquare(target, moves, directAttack, indirectAttack);
         
         // Add all possible squares upward from piece
-        moves.addAll(collectPossibleMovesUpwardFromSquare(target, moves));
+        collectPossibleMovesUpwardFromSquare(target, moves, directAttack, indirectAttack);
         
         // Add all possible squares downward from piece
-        moves.addAll(collectPossibleMovesDownwardFromSquare(target, moves));
+        collectPossibleMovesDownwardFromSquare(target, moves, directAttack, indirectAttack);
         
         // Add all possible squares left up diagonal from piece
-        moves.addAll(collectPossibleMovesLeftUpDiagOfSquare(target, moves));
+        collectPossibleMovesLeftUpDiagOfSquare(target, moves, directAttack, indirectAttack);
         
         // Add all possible squares right up diagonal from piece
-        moves.addAll(collectPossibleMovesRightUpDiagOfSquare(target, moves));
+        collectPossibleMovesRightUpDiagOfSquare(target, moves, directAttack, indirectAttack);
         
         // Add all possible squares left down diagonal from piece
-        moves.addAll(collectPossibleMovesLeftDownDiagFromSquare(target, moves));
+        collectPossibleMovesLeftDownDiagFromSquare(target, moves, directAttack, indirectAttack);
         
         // Add all possible squares right down diagonal from piece
-        moves.addAll(collectPossibleMovesRightDownDiagFromSquare(target, moves));
+        collectPossibleMovesRightDownDiagFromSquare(target, moves, directAttack, indirectAttack);
         
         // Give possible moves to piece
         queen.setPossibleMoves(moves);
+        queen.setDirectAttackSquares(directAttack);
+        queen.setIndirectAttackSquares(indirectAttack);
     }
     
-    private void calcKingMoves(King king, ArrayList<Square> moves){
+    private void calcKingMoves(King king, ArrayList<Square> moves, 
+            ArrayList<Square> directAttack, ArrayList<Square> indirectAttack){
         target = piecesToSquaresMap.get(king);
         
     }
     
     // Adds sqaures to the left of a square until the path is
     // occupied or the edge of the board.
-    private ArrayList<Square> collectPossibleMovesLeftOfSquare(
-                            Square square, ArrayList<Square> moves){
+    private void collectPossibleMovesLeftOfSquare(
+            Square square, ArrayList<Square> moves, 
+            ArrayList<Square> directAttack, ArrayList<Square> indirectAttack){
         int row = square.getRow();
         int column = square.getColumn();
+        boolean gotDirectAttack = false;
         
         column = column - 1;
         while (column >= 0){
-            if (squaresToPiecesMap.get(squares[row][column]) != null){
-                break;
+            if (!gotDirectAttack && 
+                    squaresToPiecesMap.get(squares[row][column]) != null){
+                gotDirectAttack = true;
+                directAttack.add(squares[row][column]);
             }
-            moves.add(squares[row][column]);
+            else{
+                if (gotDirectAttack){
+                    indirectAttack.add(squares[row][column]);
+                }
+                else{
+                    moves.add(squares[row][column]);
+                }
+            }
+            
             --column;
         }
-        
-        return moves;
     }
     
     // Adds sqaures to the right of a square until the path is
     // occupied or the edge of the board.
-    private ArrayList<Square> collectPossibleMovesRightOfSquare(
-                            Square square, ArrayList<Square> moves){
+    private void collectPossibleMovesRightOfSquare(
+            Square square, ArrayList<Square> moves, 
+            ArrayList<Square> directAttack, ArrayList<Square> indirectAttack){
         int row = square.getRow();
         int column = square.getColumn();
+        boolean gotDirectAttack = false;
         
         column = column + 1;
         while (column < DIMENSION){
-            if (squaresToPiecesMap.get(squares[row][column]) != null){
-                break;
+            if (!gotDirectAttack &&
+                    squaresToPiecesMap.get(squares[row][column]) != null){
+                gotDirectAttack = true;
+                directAttack.add(squares[row][column]);
             }
-            moves.add(squares[row][column]);
+            else{
+                if (gotDirectAttack){
+                    indirectAttack.add(squares[row][column]);
+                }
+                else{
+                    moves.add(squares[row][column]);
+                }  
+            }
+            
             ++column;
         }
-        
-        return moves;
     }
     
     // Adds sqaures upward from a square until the path is
     // occupied or the edge of the board.
-    private ArrayList<Square> collectPossibleMovesUpwardFromSquare(
-                            Square square, ArrayList<Square> moves){
+    private void collectPossibleMovesUpwardFromSquare(
+            Square square, ArrayList<Square> moves, 
+            ArrayList<Square> directAttack, ArrayList<Square> indirectAttack){
         int row = square.getRow();
         int column = square.getColumn();
+        boolean gotDirectAttack = false;
         
         row = row + 1;
         while (row < DIMENSION){
-            if (squaresToPiecesMap.get(squares[row][column]) != null){
-                break;
+            if (!gotDirectAttack &&
+                    squaresToPiecesMap.get(squares[row][column]) != null){
+                gotDirectAttack = true;
+                directAttack.add(squares[row][column]);
             }
-            moves.add(squares[row][column]);
+            else{
+                if (gotDirectAttack){
+                    indirectAttack.add(squares[row][column]);
+                }
+                else{
+                    moves.add(squares[row][column]);
+                }  
+            }
+
             ++row;
         }
-        
-        return moves;
     }
     
     // Adds sqaures downward from a square until the path is
     // occupied or the edge of the board.
-    private ArrayList<Square> collectPossibleMovesDownwardFromSquare(
-                            Square square, ArrayList<Square> moves){
+    private void collectPossibleMovesDownwardFromSquare(
+            Square square, ArrayList<Square> moves, 
+            ArrayList<Square> directAttack, ArrayList<Square> indirectAttack){
         int row = square.getRow();
         int column = square.getColumn();
+        boolean gotDirectAttack = false;
         
         row = row - 1;
         while (row >= 0){
-            if (squaresToPiecesMap.get(squares[row][column]) != null){
-                break;
+            if (!gotDirectAttack &&
+                    squaresToPiecesMap.get(squares[row][column]) != null){
+                gotDirectAttack = true;
+                directAttack.add(squares[row][column]);
             }
-            moves.add(squares[row][column]);
+            else{
+                if (gotDirectAttack){
+                    indirectAttack.add(squares[row][column]);
+                }
+                else{
+                    moves.add(squares[row][column]);
+                }  
+            }
+
             --row;
         }
-        
-        return moves;
     }
     
     // Adds sqaures diagonally left-up of a square until the path is
     // occupied or the edge of the board.
-    private ArrayList<Square> collectPossibleMovesLeftUpDiagOfSquare(
-                            Square square, ArrayList<Square> moves){
+    private void collectPossibleMovesLeftUpDiagOfSquare(
+                            Square square, ArrayList<Square> moves, 
+            ArrayList<Square> directAttack, ArrayList<Square> indirectAttack){
         int row = square.getRow();
         int column = square.getColumn();
+        boolean gotDirectAttack = false;  
         
         column = column - 1;
         row = row - 1;
         while (column >= 0 && row >= 0){
-            if (squaresToPiecesMap.get(squares[row][column]) != null){
-                break;
+            if (!gotDirectAttack &&
+                    squaresToPiecesMap.get(squares[row][column]) != null){
+                gotDirectAttack = true;
+                directAttack.add(squares[row][column]);
             }
-            moves.add(squares[row][column]);
+            else{
+                if (gotDirectAttack){
+                    indirectAttack.add(squares[row][column]);
+                }
+                else{
+                    moves.add(squares[row][column]);
+                }  
+            }
+
             --column;
             --row;
         }
-        
-        return moves;
     }
     
     // Adds sqaures diagonally right-up of a square until the path is
     // occupied or the edge of the board.
-    private ArrayList<Square> collectPossibleMovesRightUpDiagOfSquare(
-                            Square square, ArrayList<Square> moves){
+    private void collectPossibleMovesRightUpDiagOfSquare(
+                            Square square, ArrayList<Square> moves, 
+            ArrayList<Square> directAttack, ArrayList<Square> indirectAttack){
         int row = square.getRow();
         int column = square.getColumn();
+        boolean gotDirectAttack = false;
         
         column = column + 1;
         row = row - 1;   
         while (column < DIMENSION && row >= 0){
-            if (squaresToPiecesMap.get(squares[row][column]) != null){
-                break;
+            if (!gotDirectAttack &&
+                    squaresToPiecesMap.get(squares[row][column]) != null){
+                gotDirectAttack = true;
+                directAttack.add(squares[row][column]);
             }
-            moves.add(squares[row][column]);
+            else{
+                if (gotDirectAttack){
+                    indirectAttack.add(squares[row][column]);
+                }
+                else{
+                    moves.add(squares[row][column]);
+                }  
+            }
+            
             ++column;
             --row;
         }
-        
-        return moves;
     }
     
     // Adds sqaures diagonally left-down of a square until the path is
     // occupied or the edge of the board.
-    private ArrayList<Square> collectPossibleMovesLeftDownDiagFromSquare(
-                            Square square, ArrayList<Square> moves){
+    private void collectPossibleMovesLeftDownDiagFromSquare(
+                            Square square, ArrayList<Square> moves, 
+            ArrayList<Square> directAttack, ArrayList<Square> indirectAttack){
         int row = square.getRow();
         int column = square.getColumn();
+        boolean gotDirectAttack = false;
         
         column = column - 1;
         row = row + 1;
         while (column >= 0 && row < DIMENSION){
-            if (squaresToPiecesMap.get(squares[row][column]) != null){
-                break;
+            if (!gotDirectAttack &&
+                    squaresToPiecesMap.get(squares[row][column]) != null){
+                gotDirectAttack = true;
+                directAttack.add(squares[row][column]);
             }
-            moves.add(squares[row][column]);
+            else{
+                if (gotDirectAttack){
+                    indirectAttack.add(squares[row][column]);
+                }
+                else{
+                    moves.add(squares[row][column]);
+                }  
+            }
+            
             --column;
             ++row;
         }
-        
-        return moves;
     }
     
     // Adds sqaures diagonally right-down of a square until the path is
     // occupied or the edge of the board.
-    private ArrayList<Square> collectPossibleMovesRightDownDiagFromSquare(
-                            Square square, ArrayList<Square> moves){
+    private void collectPossibleMovesRightDownDiagFromSquare(
+                            Square square, ArrayList<Square> moves, 
+            ArrayList<Square> directAttack, ArrayList<Square> indirectAttack){
         int row = square.getRow();
         int column = square.getColumn();
+        boolean gotDirectAttack = false;
         
         column = column + 1;
         row = row + 1;
         while (column < DIMENSION && row < DIMENSION){
-            if (squaresToPiecesMap.get(squares[row][column]) != null){
-                break;
+            if (!gotDirectAttack &&
+                    squaresToPiecesMap.get(squares[row][column]) != null){
+                gotDirectAttack = true;
+                directAttack.add(squares[row][column]);
             }
-            moves.add(squares[row][column]);
+            else{
+                if (gotDirectAttack){
+                    indirectAttack.add(squares[row][column]);
+                }
+                else{
+                    moves.add(squares[row][column]);
+                }  
+            }
+
             ++column;
             ++row;
         }
-        
-        return moves;
     }
     
     public HashMap<Piece, Square> getPiecesToSquaresMap(){
