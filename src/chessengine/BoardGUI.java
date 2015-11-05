@@ -32,10 +32,14 @@ public class BoardGUI extends Application {
     final int PIECE_WIDTH = 70;
     final int PIECE_HEIGHT = 70;
     final double STROKE_WIDTH = 5;
+    
     //final Paint MOVE_HIGHLIGHT = Color.DARKCYAN;
     final Paint MOVE_HIGHLIGHT_COL = Color.DARKTURQUOISE;
     final Paint DATT_HIGHLIGHT_COL = Color.RED;
     final Paint INATT_HIGHLIGHT_COL = Color.YELLOW;
+    final Paint[] SQ_COLORSET_1 = {Color.BEIGE, Color.DARKGREEN};
+    final Paint[] SQ_COLORSET_2 = {Color.WHITE, Color.DARKGREEN};   
+    
     final Font COORDINATE_SIZE = new Font(20);
     final String DIVIDOR = "------------------------------------------------------------------------";
     
@@ -92,7 +96,7 @@ public class BoardGUI extends Application {
         squares = new ArrayList<>();
         convertFrom2DArrayToArrayList(squares, squaresFromBoard);
               
-        giveSquaresColor(squares);
+        giveSquaresColor(squares, SQ_COLORSET_2);
         root.getChildren().addAll(squares);
         addRankAndFileTexts(root);
         
@@ -139,7 +143,7 @@ public class BoardGUI extends Application {
         }
     }
     
-    private void giveSquaresColor(ArrayList<Square> squares){
+    private void giveSquaresColor(ArrayList<Square> squares, Paint[] colorSet){
         for (int i = 0; i < DIMENSION; ++i){
             for (int j = 0; j < DIMENSION; ++j){
                 
@@ -149,18 +153,18 @@ public class BoardGUI extends Application {
                 // Sets color
                 if (i % 2 == 0){
                     if (j % 2 == 0){
-                        target.setFill(Color.BEIGE);
+                        target.setFill(colorSet[0]);
                     }
                     else{
-                        target.setFill(Color.DARKGREEN);
+                        target.setFill(colorSet[1]);
                     }
                 }
                 else{
                     if (j % 2 != 0){
-                        target.setFill(Color.BEIGE);
+                        target.setFill(colorSet[0]);
                     }
                     else{
-                        target.setFill(Color.DARKGREEN);
+                        target.setFill(colorSet[1]);
                     }
                 }
             } // end j for
@@ -349,7 +353,7 @@ public class BoardGUI extends Application {
     
     private void highlightMoveSquares(ArrayList<Square> moves){
         for (Square s : moves){
-            System.out.println("possible move\t| " +
+            System.out.println("potential move\t| " +
                     fileLex[s.getColumn()] +
                     rankLex[Math.abs(DIMENSION - s.getRow() - 1)]);
                     
@@ -361,7 +365,7 @@ public class BoardGUI extends Application {
     
     private void highlightIndirectAttackSquares(ArrayList<Square> indirectAttacks){
         for (Square s : indirectAttacks) {
-            System.out.println("possible attack\t| " +
+            System.out.println("indirect attack\t| " +
                     fileLex[s.getColumn()] +
                     rankLex[Math.abs(DIMENSION - s.getRow() - 1)]);
             s.setStrokeWidth(STROKE_WIDTH);
@@ -372,7 +376,7 @@ public class BoardGUI extends Application {
     
     private void highlightDirectAttackSquares(ArrayList<Square> directAttacks){
         for (Square s : directAttacks){
-            System.out.println("possible attack\t| " +
+            System.out.println("direct attack\t| " +
                     fileLex[s.getColumn()] +
                     rankLex[Math.abs(DIMENSION - s.getRow() - 1)]);
                     
