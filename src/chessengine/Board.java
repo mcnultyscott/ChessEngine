@@ -303,6 +303,7 @@ public class Board {
         target = piecesToSquaresMap.get(pawn);
         int row = target.getRow();
         int column = target.getColumn();
+        System.out.println("row: " + row + "\t| column: " + column);
         
         if (pawn.getColor().equals(WHITE)){
             switch(row){
@@ -316,8 +317,19 @@ public class Board {
                         }  
                     }
                     
-                    directAttack.add(squares[row-1][column-1]);
-                    directAttack.add(squares[row-1][column+1]);
+//                    directAttack.add(squares[row-1][column-1]);
+//                    directAttack.add(squares[row-1][column+1]);
+                    if (column == 0){
+                        directAttack.add(squares[row+1][column+1]);
+                    }
+                    else if (column == 7){
+                        directAttack.add(squares[row+1][column-1]);
+                    }
+                    else{
+                        directAttack.add(squares[row+1][column-1]);
+                        directAttack.add(squares[row+1][column+1]);
+                    }
+                                    
                 case 0:
                     break;
             }
@@ -334,8 +346,17 @@ public class Board {
                         }
                     }
                     
-                    directAttack.add(squares[row+1][column-1]);
-                    directAttack.add(squares[row+1][column+1]);
+                   if (column == 0){
+                        directAttack.add(squares[row-1][column-1]);
+                    }
+                    else if (column == 7){
+                        directAttack.add(squares[row-1][column+1]);
+                    }
+                    else{
+                        directAttack.add(squares[row-1][column-1]);
+                        directAttack.add(squares[row-1][column+1]);
+                    }
+                
                 case 7:
                     break;
             }
