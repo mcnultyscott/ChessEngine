@@ -13,8 +13,6 @@ import javafx.scene.shape.Rectangle;
 public class Square extends Rectangle{
     public int row;
     public int column;
-    public Boolean occupied;
-    public Piece occupyingPiece;
     
     public Square(){
         
@@ -26,15 +24,6 @@ public class Square extends Rectangle{
         super(x, y, width, height);
         row = r;
         column = c;
-        occupied = false;
-    }
-    
-    public Boolean getOccupied(){
-        return occupied;
-    }
-    
-    public void setOccupied(Boolean occ){
-        occupied = occ;
     }
     
     public int getRow(){
@@ -51,13 +40,5 @@ public class Square extends Rectangle{
     
     public void setColumn(int c){
         column = c;
-    }
-    
-    public Piece getOccupyingPiece(){
-        return occupyingPiece;
-    }
-    
-    public void setOccupyingPiece(Piece p){
-        occupyingPiece = p;
     }
 }
