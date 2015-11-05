@@ -45,10 +45,6 @@ public class Piece{
         return currentSquare;
     }
     
-    public void setColor(String col){
-        color = col;
-    }
-    
     public PieceTypeEnum getPieceType(){
         return typeOfPiece;
     }
