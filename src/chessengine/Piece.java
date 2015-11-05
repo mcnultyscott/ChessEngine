@@ -37,14 +37,6 @@ public class Piece{
         return color;
     }
     
-    public void setCurrentSquare(Square square){
-        currentSquare = square;
-    }
-    
-    public Square getCurrentSquare(){
-        return currentSquare;
-    }
-    
     public PieceTypeEnum getPieceType(){
         return typeOfPiece;
     }
