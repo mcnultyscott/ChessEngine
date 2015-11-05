@@ -62,7 +62,7 @@ public class Piece{
         return indirectAttackSquares;
     }
     
-    public void setindirectAttackSquares(ArrayList<Square> indirectAttack){
+    public void setIndirectAttackSquares(ArrayList<Square> indirectAttack){
         indirectAttackSquares = indirectAttack;
     }
     
