@@ -18,9 +18,9 @@ public class Piece{
     Square currentSquare;
     String[] pieceStringList = {"Pawn", "Knight", "Bishop", "Rook", "Queen", "King"};
     PieceTypeEnum typeOfPiece;
-    ArrayList<Square> moveSquares;
-    ArrayList<Square> directAttackSquares;
-    ArrayList<Square> indirectAttackSquares;
+    ArrayList<Square> moveSquares = new ArrayList<>();
+    ArrayList<Square> directAttackSquares = new ArrayList<>();
+    ArrayList<Square> indirectAttackSquares = new ArrayList<>();
     String pathForPNG;
     
     public Piece(String col, PieceTypeEnum type){
