@@ -21,8 +21,6 @@ public class Board {
     Square target;
     
     // maps keeping track of where pieces are.
-    private HashMap<Piece, Square> mapWhitePiecesToSquares = new HashMap<Piece, Square>();
-    private HashMap<Piece, Square> mapBlackPiecesToSquares = new HashMap<Piece, Square>();
     private HashMap<Piece, Square> piecesToSquaresMap = new HashMap<Piece, Square>();
     private HashMap<Square, Piece> squaresToPiecesMap = new HashMap<Square, Piece>(64);
     // to check if a square is occupied, just check if a piece is mapped to it.
@@ -270,7 +268,7 @@ public class Board {
     // Given a piece the possible squares the piece can
     // move to will be calculated.
     public void calcMovementSquares (Piece piece){
-        ArrayList<Square> moves = new ArrayList<Square>();
+        ArrayList<Square> moves = new ArrayList<>();
         
         switch (piece.getPieceType()){
             case PAWN: 
@@ -301,7 +299,7 @@ public class Board {
     
     
     private void calcPawnMoves(Pawn pawn, ArrayList<Square> moves){
-        target = pawn.getCurrentSquare();
+        target = piecesToSquaresMap.get(pawn);
         int row = target.getRow();
         int column = target.getColumn();
         
@@ -339,7 +337,7 @@ public class Board {
     }
     
     private void calcKnightMoves(Knight knight, ArrayList<Square> moves){
-        target = knight.getCurrentSquare();
+        target = piecesToSquaresMap.get(knight);
         int row = target.getRow();
         int column = target.getColumn();
         
@@ -383,7 +381,7 @@ public class Board {
     }
     
     private void calcBishopMoves(Bishop bishop, ArrayList<Square> moves){
-        target = bishop.getCurrentSquare();
+        target = piecesToSquaresMap.get(bishop);
         
         // Add all possible squares left up diagonal from piece
         moves.addAll(collectPossibleMovesLeftUpDiagOfSquare(target, moves));
@@ -402,7 +400,7 @@ public class Board {
     }
     
     private void calcRookMoves(Rook rook, ArrayList<Square> moves){
-        target = rook.getCurrentSquare();
+        target = piecesToSquaresMap.get(rook);
         
         // Add all possible squares to left of piece
         moves.addAll(collectPossibleMovesLeftOfSquare(target, moves));
@@ -421,7 +419,7 @@ public class Board {
     }
     
     private void calcQueenMoves(Queen queen, ArrayList<Square> moves){
-        target = queen.getCurrentSquare();
+        target = piecesToSquaresMap.get(queen);
         
         // Add all possible squares to left of piece
         moves.addAll(collectPossibleMovesLeftOfSquare(target, moves));
@@ -451,7 +449,8 @@ public class Board {
         queen.setPossibleMoves(moves);
     }
     
-    private void calcKingMoves(Piece piece, ArrayList<Square> moves){
+    private void calcKingMoves(King king, ArrayList<Square> moves){
+        target = piecesToSquaresMap.get(king);
         
     }
     
@@ -461,15 +460,14 @@ public class Board {
                             Square square, ArrayList<Square> moves){
         int row = square.getRow();
         int column = square.getColumn();
-        int count;
         
-        count = column - 1;
-        while (count >= 0){
-            if (squares[row][count].getOccupied()){
+        column = column - 1;
+        while (column >= 0){
+            if (squaresToPiecesMap.get(squares[row][column]) != null){
                 break;
             }
-            moves.add(squares[row][count]);
-            --count;
+            moves.add(squares[row][column]);
+            --column;
         }
         
         return moves;
@@ -481,15 +479,14 @@ public class Board {
                             Square square, ArrayList<Square> moves){
         int row = square.getRow();
         int column = square.getColumn();
-        int count;
         
-        count = column + 1;
-        while (count < DIMENSION){
-            if (squares[row][count].getOccupied()){
+        column = column + 1;
+        while (column < DIMENSION){
+            if (squaresToPiecesMap.get(squares[row][column]) != null){
                 break;
             }
-            moves.add(squares[row][count]);
-            ++count;
+            moves.add(squares[row][column]);
+            ++column;
         }
         
         return moves;
@@ -501,15 +498,14 @@ public class Board {
                             Square square, ArrayList<Square> moves){
         int row = square.getRow();
         int column = square.getColumn();
-        int count;
         
-        count = row + 1;
-        while (count < DIMENSION){
-            if (squares[count][column].getOccupied()){
+        row = row + 1;
+        while (row < DIMENSION){
+            if (squaresToPiecesMap.get(squares[row][column]) != null){
                 break;
             }
-            moves.add(squares[count][column]);
-            ++count;
+            moves.add(squares[row][column]);
+            ++row;
         }
         
         return moves;
@@ -521,15 +517,14 @@ public class Board {
                             Square square, ArrayList<Square> moves){
         int row = square.getRow();
         int column = square.getColumn();
-        int count;
         
-        count = row - 1;
-        while (count >= 0){
-            if (squares[count][column].getOccupied()){
+        row = row - 1;
+        while (row >= 0){
+            if (squaresToPiecesMap.get(squares[row][column]) != null){
                 break;
             }
-            moves.add(squares[count][column]);
-            --count;
+            moves.add(squares[row][column]);
+            --row;
         }
         
         return moves;
@@ -543,9 +538,9 @@ public class Board {
         int column = square.getColumn();
         
         column = column - 1;
-        row = row + 1;
-        while (column >= 0 && row < DIMENSION){
-            if (squares[row][column].getOccupied()){
+        row = row - 1;
+        while (column >= 0 && row >= 0){
+            if (squaresToPiecesMap.get(squares[row][column]) != null){
                 break;
             }
             moves.add(squares[row][column]);
@@ -564,14 +559,14 @@ public class Board {
         int column = square.getColumn();
         
         column = column + 1;
-        row = row + 1;   
-        while (column < DIMENSION && row < DIMENSION){
-            if (squares[row][column].getOccupied()){
+        row = row - 1;   
+        while (column < DIMENSION && row >= 0){
+            if (squaresToPiecesMap.get(squares[row][column]) != null){
                 break;
             }
             moves.add(squares[row][column]);
             ++column;
-            ++row;
+            --row;
         }
         
         return moves;
@@ -585,14 +580,14 @@ public class Board {
         int column = square.getColumn();
         
         column = column - 1;
-        row = row - 1;
-        while (column >= 0 && row >= 0){
-            if (squares[row][column].getOccupied()){
+        row = row + 1;
+        while (column >= 0 && row < DIMENSION){
+            if (squaresToPiecesMap.get(squares[row][column]) != null){
                 break;
             }
             moves.add(squares[row][column]);
             --column;
-            --row;
+            ++row;
         }
         
         return moves;
@@ -606,14 +601,14 @@ public class Board {
         int column = square.getColumn();
         
         column = column + 1;
-        row = row - 1;
-        while (column < DIMENSION && row >= 0){
-            if (squares[row][column].getOccupied()){
+        row = row + 1;
+        while (column < DIMENSION && row < DIMENSION){
+            if (squaresToPiecesMap.get(squares[row][column]) != null){
                 break;
             }
             moves.add(squares[row][column]);
-            --column;
-            --row;
+            ++column;
+            ++row;
         }
         
         return moves;
