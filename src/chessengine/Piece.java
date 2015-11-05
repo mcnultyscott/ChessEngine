@@ -19,7 +19,8 @@ public class Piece{
     String[] pieceStringList = {"Pawn", "Knight", "Bishop", "Rook", "Queen", "King"};
     PieceTypeEnum typeOfPiece;
     ArrayList<Square> moveSquares;
-    ArrayList<Square> attackSquares;
+    ArrayList<Square> directAttackSquares;
+    ArrayList<Square> indirectAttackSquares;
     String pathForPNG;
     
     public Piece(String col, PieceTypeEnum type){
@@ -49,13 +50,21 @@ public class Piece{
         moveSquares = moves;
     }
     
-    public ArrayList<Square> getAttackingSquares(){
-        return attackSquares;
+    public ArrayList<Square> getDirectAttackSquares(){
+        return directAttackSquares;
     }
     
-    public void setAttackingSquares(ArrayList<Square> attack){
-        attackSquares = attack;
+    public void setDirectAttackSquares(ArrayList<Square> directAttack){
+        directAttackSquares = directAttack;
     }    
+    
+    public ArrayList<Square> getIndirectAttackSquares(){
+        return indirectAttackSquares;
+    }
+    
+    public void setindirectAttackSquares(ArrayList<Square> indirectAttack){
+        indirectAttackSquares = indirectAttack;
+    }
     
     @Override
     public String toString(){
