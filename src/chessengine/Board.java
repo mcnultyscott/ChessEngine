@@ -73,8 +73,8 @@ public class Board {
     Square[][] squares = new Square[8][8];
     //  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
     // [P][P][P][P][P][P][P][P][N][N][B][B][R][R][Q][K] 
-    ArrayList<Piece> whitePieces = new ArrayList<Piece>();
-    ArrayList<Piece> blackPieces = new ArrayList<Piece>();
+    ArrayList<Piece> whitePieces = new ArrayList<>();
+    ArrayList<Piece> blackPieces = new ArrayList<>();
     
     public Board(){  
         initializeSquares();
@@ -259,9 +259,9 @@ public class Board {
     
     // Move a piece to another square
     public void movePiece(Piece piece, Square toSquare){
-        piece.getCurrentSquare().setOccupied(false);
-        piece.getCurrentSquare().setOccupyingPiece(null);
-        piece.setCurrentSquare(toSquare);
+//        piece.getCurrentSquare().setOccupied(false);
+//        piece.getCurrentSquare().setOccupyingPiece(null);
+//        piece.setCurrentSquare(toSquare);
         toSquare.setOccupyingPiece(piece);
     }
     
@@ -305,29 +305,33 @@ public class Board {
         
         if (pawn.getColor().equals(WHITE)){
             switch(row){
-                case 6:
-                    moves.add(squares[row-1][column]);
-                    moves.add(squares[row-2][column]);
-                    pawn.setEnPassantable(true);
-                    break;
-                case 0:
-                    break;
                 default:
-                    moves.add(squares[row-1][column]);
+                    if (squaresToPiecesMap.get(squares[row-1][column]) == null){
+                        moves.add(squares[row-1][column]);
+                    
+                        if (squaresToPiecesMap.get(squares[row-2][column]) == null){
+                            moves.add(squares[row-2][column]);
+                            pawn.setEnPassantable(true);
+                        }  
+                    }
+                
+                case 0:
                     break;
             }
         }
         else{
             switch(row){
-                case 1:
-                    moves.add(squares[row+1][column]);
-                    moves.add(squares[row+2][column]);
-                    pawn.setEnPassantable(true);
-                    break;
-                case 7:
-                    break;
                 default:
-                    moves.add(squares[row+1][column]);
+                    if (squaresToPiecesMap.get(squares[row+1][column]) == null){
+                        moves.add(squares[row+1][column]);
+                        
+                        if (squaresToPiecesMap.get(squares[row+2][column]) == null){
+                            moves.add(squares[row+2][column]);
+                            pawn.setEnPassantable(true);
+                        }
+                    }
+                    
+                case 7:
                     break;
             }
         }
@@ -336,43 +340,52 @@ public class Board {
         pawn.setPossibleMoves(moves);
     }
     
+    // TODO: Try to think of a better way to go about this.
     private void calcKnightMoves(Knight knight, ArrayList<Square> moves){
         target = piecesToSquaresMap.get(knight);
         int row = target.getRow();
         int column = target.getColumn();
         
-        if ((row - 2) > 0){
-            if ((column - 1) > 0){
+        if ((row - 2) >= 0){
+            if ((column - 1) >= 0 && 
+                    squaresToPiecesMap.get(squares[row-2][column-1]) == null){
                 moves.add(squares[row-2][column-1]);
             }
-            if ((column + 1) < DIMENSION){
+            if ((column + 1) < DIMENSION && 
+                    squaresToPiecesMap.get(squares[row-2][column+1]) == null){
                 moves.add(squares[row-2][column+1]);
             }
         }
         
         if ((row + 2) < DIMENSION){
-            if ((column - 1) > 0){
+            if ((column - 1) >= 0 && 
+                    squaresToPiecesMap.get(squares[row+2][column-1]) == null){
                 moves.add(squares[row+2][column-1]);
             }
-            if ((column + 1) < DIMENSION){
+            if ((column + 1) < DIMENSION && 
+                    squaresToPiecesMap.get(squares[row+2][column+1]) == null){
                 moves.add(squares[row+2][column+1]);
             }
         }
         
-        if ((column - 2) > 0){
-            if ((row - 1) > 0){
+        if ((column - 2) >= 0){
+            if ((row - 1) >= 0 && 
+                    squaresToPiecesMap.get(squares[row-1][column-2]) == null){
                 moves.add(squares[row-1][column-2]);
             }
-            if ((row + 1) < DIMENSION){
+            if ((row + 1) < DIMENSION && 
+                    squaresToPiecesMap.get(squares[row+1][column-2]) == null){
                 moves.add(squares[row+1][column-2]);
             }
         }
         
         if ((column + 2) < DIMENSION){
-            if ((row - 1) > 0){
+            if ((row - 1) > 0 && 
+                    squaresToPiecesMap.get(squares[row-1][column+2]) == null){
                 moves.add(squares[row-1][column+2]);
             }
-            if ((row + 1) < DIMENSION){
+            if ((row + 1) < DIMENSION && 
+                    squaresToPiecesMap.get(squares[row+1][column+2]) == null){
                 moves.add(squares[row+1][column+2]);
             }
         }
