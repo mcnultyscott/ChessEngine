@@ -201,14 +201,6 @@ public class BoardGUI extends Application {
         final Delta dragDelta = new Delta();
         final Delta start = new Delta();
         
-//        pv.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent event) {
-//                Piece piece = pv.getPiece();
-//                
-//            }    
-//        });
-        
         pv.setOnMousePressed(new EventHandler<MouseEvent>() {         
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -225,7 +217,7 @@ public class BoardGUI extends Application {
             
                 highlightMoveSquares(piece.getPossibleMoves());
                 highlightDirectAttackSquares(piece.getDirectAttackSquares());
-                highlightIndirectAttackSquares(piece.getDirectAttackSquares());
+                highlightIndirectAttackSquares(piece.getIndirectAttackSquares());
                 
                 // record a delta distance for the drag and drop operation.
                 dragDelta.x = pv.getLayoutX() - mouseEvent.getSceneX();
@@ -368,7 +360,7 @@ public class BoardGUI extends Application {
     }
     
     private void highlightIndirectAttackSquares(ArrayList<Square> indirectAttacks){
-        for (Square s : indirectAttacks){
+        for (Square s : indirectAttacks) {
             System.out.println("possible attack\t| " +
                     fileLex[s.getColumn()] +
                     rankLex[Math.abs(DIMENSION - s.getRow() - 1)]);
@@ -376,7 +368,6 @@ public class BoardGUI extends Application {
             s.setStrokeType(StrokeType.INSIDE);
             s.setStroke(INATT_HIGHLIGHT_COL); 
         }
-        
     }
     
     private void highlightDirectAttackSquares(ArrayList<Square> directAttacks){
