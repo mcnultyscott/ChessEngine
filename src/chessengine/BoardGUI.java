@@ -43,8 +43,8 @@ public class BoardGUI extends Application {
     ArrayList<Square> squares;
     ArrayList<Piece> whitePieces;
     ArrayList<Piece> blackPieces;
-    ArrayList<PieceImageView> whitePieceImages = new ArrayList<PieceImageView>();
-    ArrayList<PieceImageView> blackPieceImages = new ArrayList<PieceImageView>();;
+    ArrayList<PieceImageView> whitePieceImages = new ArrayList<>();
+    ArrayList<PieceImageView> blackPieceImages = new ArrayList<>();;
     
     Square[][] squaresFromBoard;
     Square target;
@@ -87,7 +87,7 @@ public class BoardGUI extends Application {
         }    
         
         squaresFromBoard = board.getSquares();
-        squares = new ArrayList<Square>();
+        squares = new ArrayList<>();
         convertFrom2DArrayToArrayList(squares, squaresFromBoard);
               
         giveSquaresColor(squares);
@@ -170,9 +170,14 @@ public class BoardGUI extends Application {
             
             @Override
             public void handle(MouseEvent event) {
-                System.out.println("clicked square\t| row: " + 
-                        square.getRow() + "\t| column: " +
-                        square.getColumn() + "\t| occupying: " +
+//                System.out.println("clicked square\t| row: " + 
+//                        rankLex[square.getRow()] + "\t| column: " +
+//                        fileLex[square.getColumn()] + "\t| occupied by: " +
+//                        squaresToPiecesMap.get(square));
+                
+                System.out.println("clicked square\t| "+ 
+                        fileLex[square.getColumn()] + 
+                        rankLex[Math.abs(DIMENSION - square.getRow() - 1)] + "\t| occupied by: " +
                         squaresToPiecesMap.get(square));
                 
                 System.out.println(DIVIDOR);
@@ -210,14 +215,17 @@ public class BoardGUI extends Application {
                 System.out.println("start x: " + start.x + "\t| start y: " + start.y);
                 
                 Piece piece = pv.getPiece();
-                System.out.println(piece.toString() +
-                        "\t| row: " + piecesToSquaresMap.get(piece).getRow() +
-                        "\t| column: " + piecesToSquaresMap.get(piece).getColumn());             
+                Square square = piecesToSquaresMap.get(piece);
+                
+                System.out.println(piece.toString() + "\t| " + 
+                        fileLex[square.getColumn()] +
+                        rankLex[Math.abs(DIMENSION - square.getRow() - 1)]);             
             
                 for (Square s : piece.getPossibleMoves()){
-                    System.out.println("possible move\t| row: " +
-                            s.getRow() + "\t| column: " +
-                            s.getColumn());
+                    System.out.println("possible move\t| " +
+                            fileLex[s.getColumn()] +
+                            rankLex[Math.abs(DIMENSION - s.getRow() - 1)]);
+                    
                     s.setStrokeWidth(STROKE_WIDTH);
                     s.setStrokeType(StrokeType.INSIDE);
                     s.setStroke(MOVE_HIGHLIGHT_COL);
@@ -273,10 +281,9 @@ public class BoardGUI extends Application {
                         sourceSquare = piecesToSquaresMap.get(piece);
                         squaresToPiecesMap.replace(sourceSquare, null);
                         
-                        System.out.println("source square\t| row: " + 
-                                sourceSquare.getRow() + "\t| column: " +
-                                sourceSquare.getColumn() + "\t| occupied: " +
-                                sourceSquare.getOccupied());
+                        System.out.println("source square\t| " +
+                            fileLex[sourceSquare.getColumn()] +
+                            rankLex[Math.abs(DIMENSION - sourceSquare.getRow() - 1)]);
                         
                         // move image of piece to target sqaure
                         pv.setLayoutX(targetSquare.getX() + (SQUARE_WIDTH / 5));
@@ -288,10 +295,10 @@ public class BoardGUI extends Application {
                         // set piece's current square
                         piecesToSquaresMap.replace(piece, targetSquare);
                         
-                        System.out.println("target square\t| row: " + 
-                                targetSquare.getRow() + "\t| column: " +
-                                targetSquare.getColumn() + "\t| occupied: " +
-                                targetSquare.getOccupied());
+                        System.out.println("target square\t| " +
+                            fileLex[sourceSquare.getColumn()] +
+                            rankLex[Math.abs(DIMENSION - targetSquare.getRow() - 1)]);
+                        
                         } 
                         else{
                             System.out.println("target square not in possible moves");
