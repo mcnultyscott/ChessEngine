@@ -77,13 +77,13 @@ public class BoardGUI extends Application {
         placePieceImages(whitePieces, whitePieceImages, piecesToSquaresMap);
         placePieceImages(blackPieces, blackPieceImages, piecesToSquaresMap);
         
-        whitePieceImages.stream().forEach((v) -> {
+        for (PieceImageView v : whitePieceImages){
             givePieceEvents(v, board);
-        });
+        }
         
-        blackPieceImages.stream().forEach((v) -> {
+        for (PieceImageView v : blackPieceImages){
             givePieceEvents(v, board);
-        });
+        }
         
         // calculate initial movement squares for white and black
         for (Piece whitePiece : whitePieces){
