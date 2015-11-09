@@ -341,7 +341,6 @@ public class Board {
                     if (!pawn.getHasMoved() && 
                             squaresToPiecesMap.get(squares[row-2][column]) == null){
                         moves.add(squares[row-2][column]);
-                        //pawn.setHasMoved(true);
                         pawn.setEnPassantable(true);
                     }  
                 }
@@ -407,7 +406,6 @@ public class Board {
                     if (!pawn.getHasMoved() &&
                             squaresToPiecesMap.get(squares[row+2][column]) == null){
                         moves.add(squares[row+2][column]);
-                        //pawn.setHasMoved(true);
                         pawn.setEnPassantable(true);
                     }  
                 }
