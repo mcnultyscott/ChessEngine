@@ -17,7 +17,8 @@ public class PieceImageView extends ImageView{
     private Piece piece;
     
     public PieceImageView(Piece p, double height, double width, double x, double y){
-        image = new Image(p.pathForPNG);
+        //image = new Image(p.pathForPNG);
+        image = new Image(p.getPathForPNG());
         piece = p;
         this.setImage(image);
         this.setPreserveRatio(true);

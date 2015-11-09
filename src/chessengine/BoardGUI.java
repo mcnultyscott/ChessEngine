@@ -26,39 +26,39 @@ import javafx.stage.Stage;
  */
 
 public class BoardGUI extends Application {
-    final int DIMENSION = 8;
-    final int SQUARE_WIDTH = 100;
-    final int SQUARE_HEIGHT = 100;
-    final int PIECE_WIDTH = 70;
-    final int PIECE_HEIGHT = 70;
-    final double STROKE_WIDTH = 5;
+    private final int DIMENSION = 8;
+    private final int SQUARE_WIDTH = 100;
+    private final int SQUARE_HEIGHT = 100;
+    private final int PIECE_WIDTH = 70;
+    private final int PIECE_HEIGHT = 70;
+    private final double STROKE_WIDTH = 10;
     
     //final Paint MOVE_HIGHLIGHT = Color.DARKCYAN;
-    final Paint MOVE_HIGHLIGHT_COL = Color.DARKTURQUOISE;
-    final Paint DATT_HIGHLIGHT_COL = Color.RED;
-    final Paint INATT_HIGHLIGHT_COL = Color.YELLOW;
-    final Paint DEF_HIGHLIGHT_COL = Color.GREENYELLOW;
+    private final Paint MOVE_HIGHLIGHT_COL = Color.DARKTURQUOISE;
+    private final Paint DATT_HIGHLIGHT_COL = Color.RED;
+    private final Paint INATT_HIGHLIGHT_COL = Color.YELLOW;
+    private final Paint DEF_HIGHLIGHT_COL = Color.GREENYELLOW;
     
-    final Paint[] SQ_COLORSET_1 = {Color.BEIGE, Color.DARKGREEN};
-    final Paint[] SQ_COLORSET_2 = {Color.WHITE, Color.DARKGREEN};   
+    private final Paint[] SQ_COLORSET_1 = {Color.BEIGE, Color.DARKGREEN};
+    private final Paint[] SQ_COLORSET_2 = {Color.WHITE, Color.DARKGREEN};   
     
-    final Font COORDINATE_SIZE = new Font(20);
-    final String DIVIDOR = "------------------------------------------------------------------------";
+    private final Font COORDINATE_SIZE = new Font(20);
+    private final String DIVIDOR = "------------------------------------------------------------------------";
     
-    String[] fileLex = {"A", "B", "C", "D", "E", "F", "G", "H"};
-    String[] rankLex = {"1", "2", "3", "4", "5", "6", "7", "8"};
+    private String[] fileLex = {"A", "B", "C", "D", "E", "F", "G", "H"};
+    private String[] rankLex = {"1", "2", "3", "4", "5", "6", "7", "8"};
     
-    ArrayList<Square> squares;
-    ArrayList<Piece> whitePieces;
-    ArrayList<Piece> blackPieces;
-    ArrayList<PieceImageView> whitePieceImages = new ArrayList<>();
-    ArrayList<PieceImageView> blackPieceImages = new ArrayList<>();;
+    private ArrayList<Square> squares;
+    private ArrayList<Piece> whitePieces;
+    private ArrayList<Piece> blackPieces;
+    private ArrayList<PieceImageView> whitePieceImages = new ArrayList<>();
+    private ArrayList<PieceImageView> blackPieceImages = new ArrayList<>();;
     
-    Square[][] squaresFromBoard;
-    Square target;
+    private Square[][] squaresFromBoard;
+    private Square target;
     
-    HashMap<Piece, Square> piecesToSquaresMap;
-    HashMap<Square, Piece> squaresToPiecesMap;
+    private HashMap<Piece, Square> piecesToSquaresMap;
+    private HashMap<Square, Piece> squaresToPiecesMap;
     
     @Override
     public void start(Stage primaryStage) {   

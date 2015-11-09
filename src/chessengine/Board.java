@@ -16,9 +16,9 @@ public class Board {
     private final String BLACK = "black";
     private final String WHITE = "white";
     private final int DIMENSION = 8;  
-    final int SQUARE_WIDTH = 100;
-    final int SQUARE_HEIGHT = 100;
-    Square target;
+    private final int SQUARE_WIDTH = 100;
+    private final int SQUARE_HEIGHT = 100;
+    private Square target;
     
     // maps keeping track of where pieces are.
     private HashMap<Piece, Square> piecesToSquaresMap = new HashMap<Piece, Square>();
@@ -70,11 +70,11 @@ public class Board {
     //  0   1   2   3   4   5   6   7   |   column
     //  A   B   C   D   E   F   G   H   |   file
     
-    Square[][] squares = new Square[8][8];
+    private Square[][] squares = new Square[8][8];
     //  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
     // [P][P][P][P][P][P][P][P][N][N][B][B][R][R][Q][K] 
-    ArrayList<Piece> whitePieces = new ArrayList<>();
-    ArrayList<Piece> blackPieces = new ArrayList<>();
+    private ArrayList<Piece> whitePieces = new ArrayList<>();
+    private ArrayList<Piece> blackPieces = new ArrayList<>();
     
     public Board(){  
         initializeSquares();

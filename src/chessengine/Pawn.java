@@ -14,8 +14,7 @@ public class Pawn extends Piece{
     private Boolean enPassantable;
     
     public Pawn(String col, PieceTypeEnum type, String path){
-        super(col, type);
-        pathForPNG = path;
+        super(col, type, path);
         promotionPossible = false;
         enPassantable = false;
     }

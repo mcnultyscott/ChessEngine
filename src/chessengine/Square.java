@@ -11,8 +11,8 @@ import javafx.scene.shape.Rectangle;
  * @author Scott
  */
 public class Square extends Rectangle{
-    public int row;
-    public int column;
+    private int row;
+    private int column;
     
     public Square(){
         

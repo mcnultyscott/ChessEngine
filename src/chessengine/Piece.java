@@ -12,15 +12,15 @@ import java.util.ArrayList;
  * @author Scott
  */
 public class Piece{
-    String color;
-    Square currentSquare;
-    String[] pieceStringList = {"Pawn", "Knight", "Bishop", "Rook", "Queen", "King"};
-    PieceTypeEnum typeOfPiece;
-    ArrayList<Square> moveSquares = new ArrayList<>();
-    ArrayList<Square> directAttackSquares = new ArrayList<>();
-    ArrayList<Square> indirectAttackSquares = new ArrayList<>();
-    ArrayList<Square> defendedSquares = new ArrayList<>();
-    String pathForPNG;
+    private String color;
+    private Square currentSquare;
+    private String[] pieceStringList = {"Pawn", "Knight", "Bishop", "Rook", "Queen", "King"};
+    private PieceTypeEnum typeOfPiece;
+    private ArrayList<Square> moveSquares = new ArrayList<>();
+    private ArrayList<Square> directAttackSquares = new ArrayList<>();
+    private ArrayList<Square> indirectAttackSquares = new ArrayList<>();
+    private ArrayList<Square> defendedSquares = new ArrayList<>();
+    private String pathForPNG;
     private Boolean hasMoved;
     
     public Piece(String col, PieceTypeEnum type){
@@ -82,6 +82,10 @@ public class Piece{
     
     public Boolean getHasMoved(){
         return hasMoved;
+    }
+    
+    public String getPathForPNG(){
+        return pathForPNG;
     }
     
     @Override
