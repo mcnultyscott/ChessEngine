@@ -13,8 +13,8 @@ import javafx.scene.image.ImageView;
  * @author Scott
  */
 public class PieceImageView extends ImageView{
-    Image image;
-    Piece piece;
+    private Image image;
+    private Piece piece;
     
     public PieceImageView(Piece p, double height, double width, double x, double y){
         image = new Image(p.pathForPNG);
