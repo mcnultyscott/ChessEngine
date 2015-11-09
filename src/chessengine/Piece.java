@@ -13,7 +13,6 @@ import java.util.ArrayList;
  */
 public class Piece{
     private String color;
-    private Square currentSquare;
     private String[] pieceStringList = {"Pawn", "Knight", "Bishop", "Rook", "Queen", "King"};
     private PieceTypeEnum typeOfPiece;
     private ArrayList<Square> moveSquares = new ArrayList<>();
