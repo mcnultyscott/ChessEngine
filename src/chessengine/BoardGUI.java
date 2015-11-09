@@ -77,28 +77,27 @@ public class BoardGUI extends Application {
         placePieceImages(whitePieces, whitePieceImages, piecesToSquaresMap);
         placePieceImages(blackPieces, blackPieceImages, piecesToSquaresMap);
         
-        for (PieceImageView v : whitePieceImages){
-            givePieceEvents(v, board);
-        }
-        
-        for (PieceImageView v : blackPieceImages){
-            givePieceEvents(v, board);
+        // give each imageView object event handlers
+        int count = 0;
+        while (count < whitePieceImages.size()){
+            givePieceEvents(whitePieceImages.get(count), board);
+            givePieceEvents(blackPieceImages.get(count), board);
+            count++;
         }
         
         // calculate initial movement squares for white and black
-        for (Piece whitePiece : whitePieces){
-            board.calcMovementSquares(whitePiece);
-        }
-        
-        for (Piece blackPiece : blackPieces){
-            board.calcMovementSquares(blackPiece);
-        }    
+        count = 0;
+        while (count < whitePieces.size()){
+            board.calcMovementSquares(whitePieces.get(count));
+            board.calcMovementSquares(blackPieces.get(count));
+            count++;
+        } 
         
         squaresFromBoard = board.getSquares();
         squares = new ArrayList<>();
         convertFrom2DArrayToArrayList(squares, squaresFromBoard);
               
-        giveSquaresColor(squares, SQ_COLORSET_2);
+        giveSquaresColor(squares, SQ_COLORSET_1);
         root.getChildren().addAll(squares);
         addRankAndFileTexts(root);
         
@@ -110,6 +109,9 @@ public class BoardGUI extends Application {
         root.getChildren().addAll(blackPieceImages);
         primaryStage.setScene(scene);
         primaryStage.show();
+        
+        // From here play out the game.
+        System.out.println("after show");
     }
     
     private void placePieceImages(ArrayList<Piece> pieces,
