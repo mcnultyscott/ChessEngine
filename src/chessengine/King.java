@@ -10,10 +10,17 @@ package chessengine;
  * @author Scott
  */
 public class King extends Piece{
-    private Boolean hasMoved = false;
     private Boolean inCheck = false;
     
     public King(String col, PieceTypeEnum type, String path){
         super(col, type, path);
+    }
+    
+    public void setInCheck(Boolean check){
+        inCheck = check;
+    }
+    
+    public Boolean getInCheck(){
+        return inCheck;
     }
 }
