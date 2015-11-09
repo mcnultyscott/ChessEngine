@@ -263,33 +263,52 @@ public class BoardGUI extends Application {
                     targetSquare = squares.get(count);
 
                     // square in map maps to no piece
-                    if (squaresToPiecesMap.get(targetSquare) == null){        
+                    if (squaresToPiecesMap.get(targetSquare) == null){  
+                        
+                        System.out.println("target square\t| " +
+                                fileLex[targetSquare.getColumn()] +
+                                rankLex[Math.abs(DIMENSION - targetSquare.getRow() - 1)]);
                         
                         // if the target square is within the possible moves
                         // of the piece, move it
                         if (piece.getPossibleMoves().contains(targetSquare)){
                             
-                        // make the square that the piece was occupying empty
-                        sourceSquare = piecesToSquaresMap.get(piece);
-                        squaresToPiecesMap.replace(sourceSquare, null);
-                        
-                        System.out.println("source square\t| " +
-                            fileLex[sourceSquare.getColumn()] +
-                            rankLex[Math.abs(DIMENSION - sourceSquare.getRow() - 1)]);
-                        
-                        // move image of piece to target sqaure
-                        pv.setLayoutX(targetSquare.getX() + (SQUARE_WIDTH / 5));
-                        pv.setLayoutY(targetSquare.getY() + (SQUARE_HEIGHT / 10));
-                        
-                        // make the sqaure that the piece moves to occupied
-                        squaresToPiecesMap.replace(targetSquare, piece);
-                        
-                        // set piece's current square
-                        piecesToSquaresMap.replace(piece, targetSquare);
-                        
-                        System.out.println("target square\t| " +
-                            fileLex[sourceSquare.getColumn()] +
-                            rankLex[Math.abs(DIMENSION - targetSquare.getRow() - 1)]);
+                            // piece moved is a pawn, make it ineligible to move
+                            // forward twice again
+                            if (piece.getPieceType().equals(PieceTypeEnum.PAWN)){
+                                piece.setHasMoved(true);
+                            }
+                            
+                            // make the square that the piece was occupying empty
+                            sourceSquare = piecesToSquaresMap.get(piece);
+                            squaresToPiecesMap.replace(sourceSquare, null);
+
+                            System.out.println("source square\t| " +
+                                fileLex[sourceSquare.getColumn()] +
+                                rankLex[Math.abs(DIMENSION - sourceSquare.getRow() - 1)]);
+
+                            // move image of piece to target sqaure
+                            pv.setLayoutX(targetSquare.getX() + (SQUARE_WIDTH / 5));
+                            pv.setLayoutY(targetSquare.getY() + (SQUARE_HEIGHT / 10));
+
+                            // make the sqaure that the piece moves to occupied
+                            squaresToPiecesMap.replace(targetSquare, piece);
+
+                            // set piece's current square
+                            piecesToSquaresMap.replace(piece, targetSquare);
+                            
+                            removeMoveHighlights(piece.getPossibleMoves());
+                            removeIndirectAttackHighlights(piece.getIndirectAttackSquares());
+                            removeDirectAttackHighlights(piece.getDirectAttackSquares());
+                            
+                            // calculate possible next moves for pieces
+                            for (Piece whitePiece : whitePieces){
+                                b.calcMovementSquares(whitePiece);
+                            }
+
+                            for (Piece blackPiece : blackPieces){
+                                b.calcMovementSquares(blackPiece);
+                            }
                         
                         } 
                         else{
@@ -310,15 +329,7 @@ public class BoardGUI extends Application {
                 removeMoveHighlights(piece.getPossibleMoves());
                 removeIndirectAttackHighlights(piece.getIndirectAttackSquares());
                 removeDirectAttackHighlights(piece.getDirectAttackSquares());
-                
-                // calculate possible next moves for pieces
-                for (Piece whitePiece : whitePieces){
-                    b.calcMovementSquares(whitePiece);
-                }
 
-                for (Piece blackPiece : blackPieces){
-                    b.calcMovementSquares(blackPiece);
-                }
                 
                 System.out.println(DIVIDOR);
             }
