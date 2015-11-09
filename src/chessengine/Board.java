@@ -321,6 +321,8 @@ public class Board {
         // Give possibe moves to piece
         pawn.setPossibleMoves(moves);
         pawn.setDirectAttackSquares(directAttack);
+        pawn.setIndirectAttackSquares(indirectAttack);
+        pawn.setDefendedSquares(defended);
     }
     
     private void calcWhitePawnMoves(Pawn pawn, ArrayList<Square> moves, 
@@ -339,7 +341,7 @@ public class Board {
                     if (!pawn.getHasMoved() && 
                             squaresToPiecesMap.get(squares[row-2][column]) == null){
                         moves.add(squares[row-2][column]);
-                        pawn.setHasMoved(true);
+                        //pawn.setHasMoved(true);
                         pawn.setEnPassantable(true);
                     }  
                 }
@@ -350,27 +352,35 @@ public class Board {
                 switch(column){
 
                     case 0:
-                        if (squaresToPiecesMap.get(squares[row-1][column+1]).getColor().equals(pawn.getColor()))
+                        if (squaresToPiecesMap.get(squares[row-1][column+1]) == null)
+                            directAttack.add(squares[row-1][column+1]);   
+                        else if (squaresToPiecesMap.get(squares[row-1][column+1]).getColor().equals(pawn.getColor()))
                             defended.add(squares[row-1][column+1]);
                         else
                             directAttack.add(squares[row-1][column+1]);
                         break;
 
                     case 7:
-                        if (squaresToPiecesMap.get(squares[row-1][column-1]).getColor().equals(pawn.getColor()))
+                        if (squaresToPiecesMap.get(squares[row-1][column-1]) == null)
+                            directAttack.add(squares[row-1][column-1]);
+                        else if (squaresToPiecesMap.get(squares[row-1][column-1]).getColor().equals(pawn.getColor()))
                             defended.add(squares[row-1][column-1]);
                         else
                             directAttack.add(squares[row-1][column-1]);
                         break;
 
                     default:
-                        if (squaresToPiecesMap.get(squares[row-1][column+1]).getColor().equals(pawn.getColor()))
+                        if (squaresToPiecesMap.get(squares[row-1][column+1]) == null)
+                            directAttack.add(squares[row-1][column+1]);   
+                        else if (squaresToPiecesMap.get(squares[row-1][column+1]).getColor().equals(pawn.getColor()))
                             defended.add(squares[row-1][column+1]);
                         else
                             directAttack.add(squares[row-1][column+1]);
 
-                        if (squaresToPiecesMap.get(squares[row-1][column-1]).getColor().equals(pawn.getColor()))
-                            defended.add(squares[row-1][column-1]); 
+                        if (squaresToPiecesMap.get(squares[row-1][column-1]) == null)
+                            directAttack.add(squares[row-1][column-1]);
+                        else if (squaresToPiecesMap.get(squares[row-1][column-1]).getColor().equals(pawn.getColor()))
+                            defended.add(squares[row-1][column-1]);
                         else
                             directAttack.add(squares[row-1][column-1]);    
                 } // end switch(column)
@@ -394,10 +404,10 @@ public class Board {
                     moves.add(squares[row+1][column]);
 
                     // can advance two squares if pawn hasn't moved yet
-                    if (!pawn.getHasMoved() && 
+                    if (!pawn.getHasMoved() &&
                             squaresToPiecesMap.get(squares[row+2][column]) == null){
                         moves.add(squares[row+2][column]);
-                        pawn.setHasMoved(true);
+                        //pawn.setHasMoved(true);
                         pawn.setEnPassantable(true);
                     }  
                 }
@@ -408,27 +418,35 @@ public class Board {
                 switch(column){
 
                     case 0:
-                        if (squaresToPiecesMap.get(squares[row+1][column+1]).getColor().equals(pawn.getColor()))
+                        if (squaresToPiecesMap.get(squares[row+1][column+1]) == null)
+                            directAttack.add(squares[row+1][column+1]);
+                        else if (squaresToPiecesMap.get(squares[row+1][column+1]).getColor().equals(pawn.getColor()))
                             defended.add(squares[row+1][column+1]);
                         else
                             directAttack.add(squares[row+1][column+1]);
                         break;
 
                     case 7:
-                        if (squaresToPiecesMap.get(squares[row+1][column-1]).getColor().equals(pawn.getColor()))
+                        if (squaresToPiecesMap.get(squares[row+1][column-1]) == null)
+                            directAttack.add(squares[row+1][column-1]);
+                        else if (squaresToPiecesMap.get(squares[row+1][column-1]).getColor().equals(pawn.getColor()))
                             defended.add(squares[row+1][column-1]);
                         else
                             directAttack.add(squares[row+1][column-1]);
                         break;
 
                     default:
-                        if (squaresToPiecesMap.get(squares[row+1][column+1]).getColor().equals(pawn.getColor()))
+                        if (squaresToPiecesMap.get(squares[row+1][column+1]) == null)
+                            directAttack.add(squares[row+1][column+1]);
+                        else if (squaresToPiecesMap.get(squares[row+1][column+1]).getColor().equals(pawn.getColor()))
                             defended.add(squares[row+1][column+1]);
                         else
                             directAttack.add(squares[row+1][column+1]);
 
-                        if (squaresToPiecesMap.get(squares[row+1][column-1]).getColor().equals(pawn.getColor()))
-                            defended.add(squares[row+1][column-1]); 
+                        if (squaresToPiecesMap.get(squares[row+1][column-1]) == null)
+                            directAttack.add(squares[row+1][column-1]);
+                        else if (squaresToPiecesMap.get(squares[row+1][column-1]).getColor().equals(pawn.getColor()))
+                            defended.add(squares[row+1][column-1]);
                         else
                             directAttack.add(squares[row+1][column-1]);    
                 } // end switch(column)
@@ -454,11 +472,12 @@ public class Board {
                 moves.add(squares[row-2][column-1]);
             }
             else{
-                if ((column - 1) >= 0 &&
-                        squaresToPiecesMap.get(squares[row-2][column-1]).getColor().equals(knight.getColor()))
-                    defended.add(squares[row-2][column-1]);
-                else
-                    directAttack.add(squares[row-2][column-1]);
+                if ((column - 1) >= 0){
+                    if (squaresToPiecesMap.get(squares[row-2][column-1]).getColor().equals(knight.getColor()))
+                        defended.add(squares[row-2][column-1]);
+                    else
+                        directAttack.add(squares[row-2][column-1]);
+                }
             }
             
             if ((column + 1) < DIMENSION && 
@@ -466,11 +485,12 @@ public class Board {
                 moves.add(squares[row-2][column+1]);
             }
             else{
-                if ((column + 1) < DIMENSION &&
-                        squaresToPiecesMap.get(squares[row-2][column+1]).getColor().equals(knight.getColor()))
-                    defended.add(squares[row-2][column+1]);
-                else
-                    directAttack.add(squares[row-2][column+1]);
+                if ((column + 1) < DIMENSION){
+                    if (squaresToPiecesMap.get(squares[row-2][column+1]).getColor().equals(knight.getColor()))
+                        defended.add(squares[row-2][column+1]);
+                    else
+                        directAttack.add(squares[row-2][column+1]);
+                }
             }
         }
         
@@ -480,11 +500,12 @@ public class Board {
                 moves.add(squares[row+2][column-1]);
             }
             else{
-                if ((column - 1) >= 0 &&
-                        squaresToPiecesMap.get(squares[row+2][column-1]).getColor().equals(knight.getColor()))
-                    defended.add(squares[row+2][column-1]);
-                else
-                    directAttack.add(squares[row+2][column-1]);
+                if ((column - 1) >= 0){
+                    if (squaresToPiecesMap.get(squares[row+2][column-1]).getColor().equals(knight.getColor()))
+                        defended.add(squares[row+2][column-1]);
+                    else
+                        directAttack.add(squares[row+2][column-1]);
+                }
             }
             
             if ((column + 1) < DIMENSION && 
@@ -492,11 +513,12 @@ public class Board {
                 moves.add(squares[row+2][column+1]);
             }
             else{
-                if ((column + 1) < DIMENSION &&
-                        squaresToPiecesMap.get(squares[row+2][column+1]).getColor().equals(knight.getColor()))
-                    defended.add(squares[row+2][column+1]);
-                else
-                    directAttack.add(squares[row+2][column+1]);
+                if ((column + 1) < DIMENSION){
+                    if (squaresToPiecesMap.get(squares[row+2][column+1]).getColor().equals(knight.getColor()))
+                        defended.add(squares[row+2][column+1]);
+                    else
+                        directAttack.add(squares[row+2][column+1]);
+                }
             }
         }
         
@@ -506,11 +528,12 @@ public class Board {
                 moves.add(squares[row-1][column-2]);
             }
             else{
-                if ((row - 1) >= 0 &&
-                        !squaresToPiecesMap.get(squares[row-1][column-2]).getColor().equals(knight.getColor()))
-                    defended.add(squares[row-1][column-2]);
-                else
-                    directAttack.add(squares[row-1][column-2]);
+                if ((row - 1) >= 0){
+                    if (squaresToPiecesMap.get(squares[row-1][column-2]).getColor().equals(knight.getColor()))
+                        defended.add(squares[row-1][column-2]);
+                    else
+                        directAttack.add(squares[row-1][column-2]);
+                }
             }
             
             if ((row + 1) < DIMENSION && 
@@ -518,11 +541,12 @@ public class Board {
                 moves.add(squares[row+1][column-2]);
             }
             else{
-                if ((row + 1) < DIMENSION &&
-                        squaresToPiecesMap.get(squares[row+1][column-2]).getColor().equals(knight.getColor()))
-                    defended.add(squares[row+1][column-2]);
-                else
-                    directAttack.add(squares[row+1][column-2]);
+                if ((row + 1) < DIMENSION){
+                    if (squaresToPiecesMap.get(squares[row+1][column-2]).getColor().equals(knight.getColor()))
+                        defended.add(squares[row+1][column-2]);
+                    else
+                        directAttack.add(squares[row+1][column-2]);
+                }          
             }
         }
         
@@ -532,11 +556,12 @@ public class Board {
                 moves.add(squares[row-1][column+2]);
             }
             else{
-                if ((row - 1) > 0 &&
-                        !squaresToPiecesMap.get(squares[row-1][column+2]).getColor().equals(knight.getColor()))
-                    defended.add(squares[row-1][column+2]);
-                else
-                    directAttack.add(squares[row-1][column+2]);
+                if ((row - 1) > 0){
+                    if (squaresToPiecesMap.get(squares[row-1][column+2]).getColor().equals(knight.getColor()))
+                        defended.add(squares[row-1][column+2]);
+                    else
+                        directAttack.add(squares[row-1][column+2]);
+                }
             }
             
             if ((row + 1) < DIMENSION && 
@@ -544,14 +569,19 @@ public class Board {
                 moves.add(squares[row+1][column+2]);
             }
             else{
-                if ((row + 1) < DIMENSION &&
-                        !squaresToPiecesMap.get(squares[row+1][column+2]).getColor().equals(knight.getColor()))
-                    directAttack.add(squares[row+1][column+2]);
+                if ((row + 1) < DIMENSION){
+                    if (squaresToPiecesMap.get(squares[row+1][column+2]).getColor().equals(knight.getColor()))
+                        defended.add(squares[row+1][column+2]);
+                    else
+                        directAttack.add(squares[row+1][column+2]);
+                }
             }
         }
         
         knight.setPossibleMoves(moves);
         knight.setDirectAttackSquares(directAttack);
+        knight.setIndirectAttackSquares(indirectAttack);
+        knight.setDefendedSquares(defended);
     }
     
     private void calcBishopMoves(Bishop bishop, ArrayList<Square> moves, 
@@ -575,6 +605,7 @@ public class Board {
         bishop.setPossibleMoves(moves);
         bishop.setDirectAttackSquares(directAttack);
         bishop.setIndirectAttackSquares(indirectAttack);
+        bishop.setDefendedSquares(defended);
     }
     
     private void calcRookMoves(Rook rook, ArrayList<Square> moves, 
@@ -598,6 +629,7 @@ public class Board {
         rook.setPossibleMoves(moves);
         rook.setDirectAttackSquares(directAttack);
         rook.setIndirectAttackSquares(indirectAttack);
+        rook.setDefendedSquares(defended);
     }
     
     private void calcQueenMoves(Queen queen, ArrayList<Square> moves, 
@@ -633,6 +665,7 @@ public class Board {
         queen.setPossibleMoves(moves);
         queen.setDirectAttackSquares(directAttack);
         queen.setIndirectAttackSquares(indirectAttack);
+        queen.setDefendedSquares(defended);
     }
     
     private void calcKingMoves(King king, ArrayList<Square> moves, 
@@ -640,6 +673,11 @@ public class Board {
             ArrayList<Square> defended){
         target = piecesToSquaresMap.get(king);
         
+        
+        king.setPossibleMoves(moves);
+        king.setDirectAttackSquares(directAttack);
+        king.setIndirectAttackSquares(indirectAttack);
+        king.setDefendedSquares(defended);   
     }
     
     // Adds sqaures to the left of a square until the path is
