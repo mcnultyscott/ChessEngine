@@ -10,22 +10,14 @@ package chessengine;
  * @author Scott
  */
 public class Pawn extends Piece{
-    Boolean hasMoved = false;
-    Boolean promotionPossible = false;
-    Boolean enPassantable = false;
+    private Boolean promotionPossible;
+    private Boolean enPassantable;
     
     public Pawn(String col, PieceTypeEnum type, String path){
         super(col, type);
         pathForPNG = path;
-        
-    }
-    
-    public void setHasMoved(Boolean move){
-        hasMoved = move;
-    }
-    
-    public Boolean getHasMoved(){
-        return hasMoved;
+        promotionPossible = false;
+        enPassantable = false;
     }
     
     public void setEnPassantable (Boolean en){
@@ -34,6 +26,14 @@ public class Pawn extends Piece{
     
     public Boolean getEnPassantable (){
         return enPassantable;
-    }    
+    }   
+    
+    public void setPromotionPossible (Boolean promotion){
+        promotionPossible = promotion;
+    }
+    
+    public Boolean getPromotionPossible (){
+        return promotionPossible;
+    } 
 }
 

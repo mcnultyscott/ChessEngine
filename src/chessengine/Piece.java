@@ -6,8 +6,6 @@
 package chessengine;
 
 import java.util.ArrayList;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 /**
  *
@@ -23,16 +21,19 @@ public class Piece{
     ArrayList<Square> indirectAttackSquares = new ArrayList<>();
     ArrayList<Square> defendedSquares = new ArrayList<>();
     String pathForPNG;
+    private Boolean hasMoved;
     
     public Piece(String col, PieceTypeEnum type){
            color = col;
-           typeOfPiece = type;      
+           typeOfPiece = type;
+           hasMoved = false;
     }
     
     public Piece(String col, PieceTypeEnum type, String path){
            color = col;
            typeOfPiece = type;      
            pathForPNG = path;
+           hasMoved = false;
     }
     
     public String getColor(){
@@ -73,6 +74,14 @@ public class Piece{
     
     public void setDefendedSquares(ArrayList<Square> defended){
         defendedSquares = defended;
+    }   
+    
+    public void setHasMoved(Boolean move){
+        hasMoved = move;
+    }
+    
+    public Boolean getHasMoved(){
+        return hasMoved;
     }
     
     @Override
