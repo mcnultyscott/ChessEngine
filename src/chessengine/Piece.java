@@ -43,6 +43,18 @@ public class Piece{
         return typeOfPiece;
     }
     
+    public void setHasMoved(Boolean move){
+        hasMoved = move;
+    }
+    
+    public Boolean getHasMoved(){
+        return hasMoved;
+    }
+    
+    public String getPathForPNG(){
+        return pathForPNG;
+    }
+    
     public ArrayList<Square> getPossibleMoves(){
         return moveSquares;
     }
@@ -73,18 +85,6 @@ public class Piece{
     
     public void setDefendedSquares(ArrayList<Square> defended){
         defendedSquares = defended;
-    }   
-    
-    public void setHasMoved(Boolean move){
-        hasMoved = move;
-    }
-    
-    public Boolean getHasMoved(){
-        return hasMoved;
-    }
-    
-    public String getPathForPNG(){
-        return pathForPNG;
     }
     
     @Override
