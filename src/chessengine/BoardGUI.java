@@ -37,6 +37,8 @@ public class BoardGUI extends Application {
     final Paint MOVE_HIGHLIGHT_COL = Color.DARKTURQUOISE;
     final Paint DATT_HIGHLIGHT_COL = Color.RED;
     final Paint INATT_HIGHLIGHT_COL = Color.YELLOW;
+    final Paint DEF_HIGHLIGHT_COL = Color.GREENYELLOW;
+    
     final Paint[] SQ_COLORSET_1 = {Color.BEIGE, Color.DARKGREEN};
     final Paint[] SQ_COLORSET_2 = {Color.WHITE, Color.DARKGREEN};   
     
@@ -222,6 +224,7 @@ public class BoardGUI extends Application {
                 highlightMoveSquares(piece.getPossibleMoves());
                 highlightDirectAttackSquares(piece.getDirectAttackSquares());
                 highlightIndirectAttackSquares(piece.getIndirectAttackSquares());
+                highlightDefendedSquares(piece.getDefendedSquares());
                 
                 // record a delta distance for the drag and drop operation.
                 dragDelta.x = pv.getLayoutX() - mouseEvent.getSceneX();
@@ -300,6 +303,7 @@ public class BoardGUI extends Application {
                             removeMoveHighlights(piece.getPossibleMoves());
                             removeIndirectAttackHighlights(piece.getIndirectAttackSquares());
                             removeDirectAttackHighlights(piece.getDirectAttackSquares());
+                            removeDefendedHighlights(piece.getDefendedSquares());
                             
                             // calculate possible next moves for pieces
                             for (Piece whitePiece : whitePieces){
@@ -329,7 +333,7 @@ public class BoardGUI extends Application {
                 removeMoveHighlights(piece.getPossibleMoves());
                 removeIndirectAttackHighlights(piece.getIndirectAttackSquares());
                 removeDirectAttackHighlights(piece.getDirectAttackSquares());
-
+                removeDefendedHighlights(piece.getDefendedSquares());
                 
                 System.out.println(DIVIDOR);
             }
@@ -362,6 +366,12 @@ public class BoardGUI extends Application {
         }
     }
     
+    private void removeDefendedHighlights(ArrayList<Square> defended){
+        for (Square s : defended){
+            s.setStroke(null);
+        }
+    }
+    
     private void highlightMoveSquares(ArrayList<Square> moves){
         for (Square s : moves){
             System.out.println("potential move\t| " +
@@ -379,6 +389,7 @@ public class BoardGUI extends Application {
             System.out.println("indirect attack\t| " +
                     fileLex[s.getColumn()] +
                     rankLex[Math.abs(DIMENSION - s.getRow() - 1)]);
+            
             s.setStrokeWidth(STROKE_WIDTH);
             s.setStrokeType(StrokeType.INSIDE);
             s.setStroke(INATT_HIGHLIGHT_COL); 
@@ -394,6 +405,18 @@ public class BoardGUI extends Application {
             s.setStrokeWidth(STROKE_WIDTH);
             s.setStrokeType(StrokeType.INSIDE);
             s.setStroke(DATT_HIGHLIGHT_COL);        
+        }
+    }
+    
+    private void highlightDefendedSquares(ArrayList<Square> defended){
+        for (Square s : defended){
+            System.out.println("defended square\t| " +
+                    fileLex[s.getColumn()] +
+                    rankLex[Math.abs(DIMENSION - s.getRow() - 1)]);
+                    
+            s.setStrokeWidth(STROKE_WIDTH);
+            s.setStrokeType(StrokeType.INSIDE);
+            s.setStroke(DEF_HIGHLIGHT_COL);        
         }
     }
     
