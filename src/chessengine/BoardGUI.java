@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -110,6 +111,19 @@ public class BoardGUI extends Application {
         
         primaryStage.setScene(scene);
         primaryStage.show();
+        
+        Stage pickSideStage = new Stage();
+        Group g = new Group();
+        Scene pickSideScene = new Scene(g, 300, 300);
+        Button pickWhite = new Button("Pick White!");
+        Button pickBlack = new Button("Pick Black!");
+        
+        g.getChildren().add(pickWhite);
+        g.getChildren().add(pickBlack);
+        
+        pickSideStage.setScene(pickSideScene);
+        pickSideStage.show();
+        
         
         // From here play out the game.
         System.out.println("after show");
