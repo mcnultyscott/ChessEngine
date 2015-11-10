@@ -55,12 +55,13 @@ public class BoardGUI extends Application {
     private HashMap<Piece, Square> piecesToSquaresMap;
     private HashMap<Square, Piece> squaresToPiecesMap;
     
+    private Board board;
+    private Group root;
+    private Scene scene;
+    
     @Override
-    public void start(Stage primaryStage) {   
-        final Board board = new Board();
-        Group root = new Group();
-        Scene scene = new Scene(root, DIMENSION * SQUARE_WIDTH, 
-                                    DIMENSION * SQUARE_HEIGHT);
+    public void init(){
+        board = new Board();
         
         piecesToSquaresMap = board.getPiecesToSquaresMap();
         squaresToPiecesMap = board.getSquaresToPiecesMap();
@@ -73,25 +74,25 @@ public class BoardGUI extends Application {
         placePieceImages(blackPieces, blackPieceImages, piecesToSquaresMap);
         
         // give each imageView object event handlers
+        // calculate initial movement squares for each piece
         int count = 0;
         while (count < whitePieceImages.size()){
             givePieceEvents(whitePieceImages.get(count), board);
             givePieceEvents(blackPieceImages.get(count), board);
-            count++;
-        }
-        
-        // calculate initial movement squares for white and black
-        count = 0;
-        while (count < whitePieces.size()){
+            
             board.calcMovementSquares(whitePieces.get(count));
             board.calcMovementSquares(blackPieces.get(count));
             count++;
-        } 
+        }
         
         squaresFromBoard = board.getSquares();
         squares = new ArrayList<>();
         convertFrom2DArrayToArrayList(squares, squaresFromBoard);
-              
+        
+        root = new Group();
+        scene = new Scene(root, DIMENSION * SQUARE_WIDTH, 
+                                    DIMENSION * SQUARE_HEIGHT);
+        
         giveSquaresColor(squares, SQ_COLORSET_1);
         root.getChildren().addAll(squares);
         addRankAndFileTexts(root);
@@ -102,6 +103,11 @@ public class BoardGUI extends Application {
         
         root.getChildren().addAll(whitePieceImages);
         root.getChildren().addAll(blackPieceImages);
+    }
+    
+    @Override
+    public void start(Stage primaryStage) {
+        
         primaryStage.setScene(scene);
         primaryStage.show();
         
@@ -421,6 +427,8 @@ public class BoardGUI extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        ChessGame game = new ChessGame();
+        
         launch(args);
     }
     
