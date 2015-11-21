@@ -21,11 +21,13 @@ public class Piece{
     private ArrayList<Square> defendedSquares = new ArrayList<>();
     private String pathForPNG;
     private Boolean hasMoved;
+    private Boolean pinned;
     
     public Piece(String col, PieceTypeEnum type){
            color = col;
            typeOfPiece = type;
            hasMoved = false;
+           pinned = false;
     }
     
     public Piece(String col, PieceTypeEnum type, String path){
@@ -33,6 +35,7 @@ public class Piece{
            typeOfPiece = type;      
            pathForPNG = path;
            hasMoved = false;
+           pinned = false;
     }
     
     public String getColor(){
@@ -85,6 +88,14 @@ public class Piece{
     
     public void setDefendedSquares(ArrayList<Square> defended){
         defendedSquares = defended;
+    }
+    
+    public void setPinned(boolean p){
+        pinned = p;
+    }
+    
+    public boolean getPinned(){
+        return pinned;
     }
     
     @Override
