@@ -76,6 +76,9 @@ public class Board {
     private ArrayList<Piece> whitePieces = new ArrayList<>();
     private ArrayList<Piece> blackPieces = new ArrayList<>();
     
+    private ArrayList<Square> squaresAttackedByWhite = new ArrayList<>();
+    private ArrayList<Square> squaresAttackedByBlack = new ArrayList<>();
+    
     public Board(){  
         initializeSquares();
         setUpNewGame();
