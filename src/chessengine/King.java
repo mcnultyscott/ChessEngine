@@ -11,6 +11,7 @@ package chessengine;
  */
 public class King extends Piece{
     private Boolean inCheck = false;
+    private Boolean canCastle = true;
     
     public King(String col, PieceTypeEnum type, String path){
         super(col, type, path);
@@ -22,5 +23,13 @@ public class King extends Piece{
     
     public Boolean getInCheck(){
         return inCheck;
+    }
+    
+    public void setCanCastle(Boolean castle){
+        canCastle = castle;
+    }
+    
+    public Boolean getCanCastle(){
+        return canCastle;
     }
 }

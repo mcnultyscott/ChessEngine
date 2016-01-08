@@ -121,8 +121,8 @@ public class BoardGUI extends Application {
         g.getChildren().add(pickWhite);
         g.getChildren().add(pickBlack);
         
-        pickSideStage.setScene(pickSideScene);
-        pickSideStage.show();
+//        pickSideStage.setScene(pickSideScene);
+//        pickSideStage.show();
         
         
         // From here play out the game.

@@ -457,9 +457,9 @@ public class Board {
                 break;
         } // end switch(row)
     }
-    
-    
+      
     // TODO: Try to think of a better way to go about this.
+    // This looks VERY awkward and is hard to understand
     private void calcKnightMoves(Knight knight, ArrayList<Square> moves, 
             ArrayList<Square> directAttack, ArrayList<Square> indirectAttack, 
             ArrayList<Square> defended){
@@ -676,12 +676,53 @@ public class Board {
             ArrayList<Square> directAttack, ArrayList<Square> indirectAttack, 
             ArrayList<Square> defended){
         target = piecesToSquaresMap.get(king);
+        squaresAttackedByWhite.clear();
+        squaresAttackedByBlack.clear();
         
+        // Put attacked squares in squaresAttackeBy[White/Black]
+        collectAttackedSquares();
+
+        // King cannot castle
+        if (king.getHasMoved()){
+            king.setCanCastle(true);
+            
+        }
         
         king.setPossibleMoves(moves);
         king.setDirectAttackSquares(directAttack);
         king.setIndirectAttackSquares(indirectAttack);
         king.setDefendedSquares(defended);   
+    }
+     
+    private void collectAttackedSquares(){
+        ArrayList<Square> whiteDirectAttackSquaresTemp;
+        ArrayList<Square> blackDirectAttackSquaresTemp;
+        
+        int i = 0;
+        while (i < whitePieces.size()){
+            whiteDirectAttackSquaresTemp = whitePieces.get(i).getDirectAttackSquares();
+            blackDirectAttackSquaresTemp = blackPieces.get(i).getDirectAttackSquares();
+            
+            int j = 0;
+            while (j < whiteDirectAttackSquaresTemp.size()){
+                if (squaresAttackedByWhite.contains(whiteDirectAttackSquaresTemp.get(j))){
+                    squaresAttackedByWhite.add(whiteDirectAttackSquaresTemp.get(j));
+                }
+ 
+                j++;
+            }
+            
+            j = 0;
+            while (j < blackDirectAttackSquaresTemp.size()){
+                if (squaresAttackedByBlack.contains(blackDirectAttackSquaresTemp.get(j))){
+                    squaresAttackedByBlack.add(blackDirectAttackSquaresTemp.get(j));
+                }
+                
+                j++;
+            }
+            
+            i++;
+        }
     }
     
     // Adds sqaures to the left of a square until the path is
